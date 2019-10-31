@@ -1,0 +1,39 @@
+{
+  "name": "imager",
+  "version": "1.0.0",
+  "description": "Traverses image directory and backs up/ resizes images and saves path to db.",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "node lib/index.js",
+    "start:live": "npm run build:live",
+    "debugjs": "node %NODE_DEBUG_OPTION% --max-old-space-size=1024 lib/index.js",
+    "build": "tsc -p .",
+    "build:live": "nodemon --watch 'src/**/*.ts' --exec ts-node src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zoroloco/imager.git"
+  },
+  "keywords": [
+    "imagemagick"
+  ],
+  "author": "kenneth centurion",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zoroloco/imager/issues"
+  },
+  "dependencies": {
+    "mysql": "2.17.1",
+    "winston": "3.2.1",
+    "underscore": "^1.8.16"
+  },
+  "devDependencies": {
+    "@types/node": "^12.0.0",
+    "@types/underscore": "^1.8.16",
+    "@types/mysql": "2.15.7",
+    "nodemon": "^1.19.0",
+    "ts-node": "^8.1.0",
+    "typescript": "^3.4.5"
+  },
+  "homepage": "https://github.com/zoroloco/imager#readme"
+}

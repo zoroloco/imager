@@ -1,0 +1,19 @@
+{
+    "title": "imager",
+    "version": "1.0",
+    "logger": {
+        "fileEnabled": true,
+        "dir": "logs",
+        "debug": false,
+        "info": true,
+        "warn": true,
+        "error": true
+    },
+    "mysql": {
+        "host": "localhost",
+        "user": "zoroloco",
+        "password": "zoroloco",
+        "database": "druidia"
+    },
+    "rootDir": "/mnt/druidia/sonograms"
+}
