@@ -15,5 +15,19 @@
     "password":"zoroloco",
     "database":"druidia"
   },
-  "rootDir" : "/mnt/druidia/sonograms"
+  "imageDir" : "/mnt/druidia/sonograms",
+  "fileBulkSize": 5,
+  "queueSettings":{
+    "maxRetries": 1,
+    "retryDelay": 1000,
+    "batchSize": 1,
+    "batchDelay": 2000,
+    "batchDelayTimeout": 1000,
+    "afterProcessDelay": 300
+  },
+  "thumbnailSettings": {
+    "width": 100,
+    "height": 100,
+    "quality": 33
+  }
 }

@@ -13,10 +13,12 @@ process.on('SIGTERM', function() {
 
 process.on('SIGINT', function() {
     Logger.warn("Caught interrupt signal(Ctrl-C)");
+    process.exit();
 });
 
 process.on('exit', function(){
     Logger.info("Process exiting...");
+    process.exit();
 })
 
 process.on('uncaughtException', function (err) {

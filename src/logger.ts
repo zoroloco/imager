@@ -85,7 +85,7 @@ export class Logger{
                     ),
                     transports: [
                         new winston.transports.File({
-                            filename: pathUtil.join(conf.logger.dir,conf.title+'-'+dateStamp.getDate()+'-'+dateStamp.getMonth()+'-'+dateStamp.getFullYear()+'.log'),
+                            filename: pathUtil.join(conf.logger.dir,conf.title+'-'+dateStamp.getUTCDate()+'-'+(dateStamp.getUTCMonth()+1)+'-'+dateStamp.getUTCFullYear()+'.log'),
                             maxFiles: 256,
                             maxsize:4194304,
                             handleExceptions: true})
