@@ -1,26 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="be9186f4-1f1a-47dd-abf5-439bb2da600f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/conf.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/index.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/lib/index.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/logger.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/logger.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/lib/logger.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/mysqlClient.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/mysqlClient.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/lib/mysqlClient.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/conf.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/conf.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/logger.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/logger.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
-    </list>
+    <list default="true" id="be9186f4-1f1a-47dd-abf5-439bb2da600f" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -41,12 +22,12 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="mock:///Local">
           <provider selected="true" editor-type-id="terminal-session-editor" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app.ts">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="357">
@@ -185,12 +166,12 @@
       <updated>1572446650888</updated>
       <workItem from="1572446652375" duration="11466000" />
       <workItem from="1572538291439" duration="3733000" />
-      <workItem from="1572613223814" duration="14247000" />
+      <workItem from="1572613223814" duration="14402000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="29446000" />
+    <option name="totallyTimeSpent" value="29601000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
@@ -339,13 +320,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/conf.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="20" column="19" selection-start-line="20" selection-start-column="19" selection-end-line="20" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
@@ -353,6 +327,13 @@
           <folding>
             <element signature="e#0#32#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/conf.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="20" column="19" selection-start-line="20" selection-start-column="19" selection-end-line="20" selection-end-column="19" />
         </state>
       </provider>
     </entry>
