@@ -37,7 +37,7 @@ export default class MySqlClient{
     }
 
     query(queryStr:string): Promise<any>{
-        Logger.debug('Executing select query:'+queryStr);
+        Logger.debug('Executing query:'+queryStr);
         return new Promise((resolve,reject)=>{
             this.connection.query({sql: queryStr, timeout: 60000}, (err:any, rows: any) => {
                 if (err && err.code === 'PROTOCOL_SEQUENCE_TIMEOUT') {
@@ -52,7 +52,7 @@ export default class MySqlClient{
                     reject(err);
                 }
 
-                //Logger.info('Successfully retrieved: '+rows.length+' rows.');
+                Logger.debug('Successfully retrieved: '+rows.length+' rows.');
                 resolve(rows);
             });
         });

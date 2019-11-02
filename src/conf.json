@@ -27,8 +27,6 @@
     "afterProcessDelay": 300
   },
   "thumbnailSettings": {
-    "width": 250,
-    "height": 250,
     "quality": 50
   }
 }

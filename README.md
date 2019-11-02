@@ -1,5 +1,5 @@
 # imager
-Traverses image directory and backs up/ resizes images and saves path to db.
+Traverses source directory and copies all images and creates a thumbnail and saves path to db.
 Makes use of queues to not stress out OS with too many running child processes.
 
 Dependencies:
