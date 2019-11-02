@@ -16,3 +16,4 @@ npm start
 
 TODO: 
 - gracefully close mysql db connection.
+- fix thumbnail cropping
