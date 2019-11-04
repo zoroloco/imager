@@ -36,6 +36,10 @@ export default class MySqlClient{
         });
     }
 
+    getConnection(): any{
+        return this.connection;
+    }
+
     query(queryStr:string): Promise<any>{
         Logger.debug('Executing query:'+queryStr);
         return new Promise((resolve,reject)=>{

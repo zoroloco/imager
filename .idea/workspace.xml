@@ -2,13 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="be9186f4-1f1a-47dd-abf5-439bb2da600f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/fileData.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/app.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/conf.json" beforeDir="false" afterPath="$PROJECT_DIR$/lib/conf.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/mysqlClient.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/mysqlClient.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/mysqlClient.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/lib/mysqlClient.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/conf.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/conf.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mysqlClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/mysqlClient.ts" afterDir="false" />
@@ -30,22 +31,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/conf.json">
+        <entry file="file://$PROJECT_DIR$/package.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="65">
-              <caret line="5" column="23" lean-forward="true" selection-start-line="5" selection-start-column="23" selection-end-line="5" selection-end-column="23" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/README.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="234">
-                <caret line="18" column="24" lean-forward="true" selection-start-line="18" selection-start-column="24" selection-end-line="18" selection-end-column="24" />
-              </first_editor>
-              <second_editor />
+            <state relative-caret-position="390">
+              <caret line="30" column="20" selection-start-line="30" selection-start-column="20" selection-end-line="30" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -53,8 +42,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/app.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="196">
-              <caret line="247" column="66" selection-start-line="247" selection-start-column="66" selection-end-line="247" selection-end-column="66" />
+            <state relative-caret-position="291">
+              <caret line="108" lean-forward="true" selection-start-line="108" selection-end-line="108" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
@@ -63,10 +52,28 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fileData.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="195">
+              <caret line="15" column="64" selection-start-line="15" selection-start-column="64" selection-end-line="15" selection-end-column="64" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/conf.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="78">
+              <caret line="6" column="20" selection-start-line="6" selection-start-column="20" selection-end-line="6" selection-end-column="20" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/mysqlClient.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="455">
-              <caret line="37" lean-forward="true" selection-start-line="37" selection-end-line="37" />
+            <state relative-caret-position="481">
+              <caret line="39" column="31" selection-start-line="39" selection-start-column="31" selection-end-line="39" selection-end-column="31" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -78,13 +85,8 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>conf</find>
-      <find>fs.</find>
-      <find>select query</find>
-      <find>backupFile</find>
       <find>rootDir</find>
       <find>filesToProcess</find>
-      <find>createThumbnail</find>
       <find>processQueueTask</find>
       <find>Dir</find>
       <find>path.join(conf.destDir,path.basename(conf.sourceDir)+'_COPY')</find>
@@ -96,7 +98,6 @@
       <find>identi</find>
       <find>processfiles</find>
       <find>queryDestDir</find>
-      <find>persistImage</find>
       <find>executing</find>
       <find>persistDestDir</find>
       <find>verifyNewFile</find>
@@ -104,6 +105,16 @@
       <find>were cpi</find>
       <find>checkIfDone</find>
       <find>DONE</find>
+      <find>out of</find>
+      <find>insert</find>
+      <find>query</find>
+      <find>queueUpFiles</find>
+      <find>object</find>
+      <find>objec</find>
+      <find>copyFile</find>
+      <find>persistImage</find>
+      <find>createThumbnail</find>
+      <find>originalf</find>
     </findStrings>
     <replaceStrings>
       <replace>imageDir</replace>
@@ -121,10 +132,11 @@
         <option value="$PROJECT_DIR$/src/index.ts" />
         <option value="$PROJECT_DIR$/src/logger.ts" />
         <option value="$PROJECT_DIR$/tsconfig.json" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/src/mysqlClient.ts" />
+        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/conf.json" />
+        <option value="$PROJECT_DIR$/src/fileData.ts" />
         <option value="$PROJECT_DIR$/src/app.ts" />
       </list>
     </option>
@@ -134,16 +146,6 @@
     <exe-path />
     <other-services-enabled>true</other-services-enabled>
     <auto-save>true</auto-save>
-  </component>
-  <component name="ProjectConfigurationFiles">
-    <option name="files">
-      <list>
-        <option value="$PROJECT_DIR$/.idea/imager.iml" />
-        <option value="$PROJECT_DIR$/.idea/misc.xml" />
-        <option value="$PROJECT_DIR$/.idea/vcs.xml" />
-        <option value="$PROJECT_DIR$/.idea/modules.xml" />
-      </list>
-    </option>
   </component>
   <component name="ProjectFrameBounds" fullScreen="true">
     <option name="width" value="1280" />
@@ -157,6 +159,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -173,7 +176,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -218,12 +220,14 @@
       <workItem from="1572613223814" duration="14402000" />
       <workItem from="1572649063427" duration="167000" />
       <workItem from="1572666747568" duration="4489000" />
-      <workItem from="1572701666506" duration="12105000" />
+      <workItem from="1572701666506" duration="12180000" />
+      <workItem from="1572739357144" duration="331000" />
+      <workItem from="1572834570431" duration="7438000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="46362000" />
+    <option name="totallyTimeSpent" value="54206000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
@@ -345,15 +349,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
+    <entry file="file://$PROJECT_DIR$/LICENSE">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@types/underscore/index.d.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="338">
-          <caret line="26" column="6" lean-forward="true" selection-start-line="26" selection-start-column="6" selection-end-line="26" selection-end-column="6" />
+        <state relative-caret-position="226">
+          <caret line="3836" column="8" selection-start-line="3836" selection-start-column="8" selection-end-line="3836" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/LICENSE">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/lib/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="226">
+          <caret line="78" column="28" selection-start-line="78" selection-start-column="28" selection-end-line="78" selection-end-column="28" />
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
@@ -365,17 +376,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/@types/underscore/index.d.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="3836" column="8" selection-start-line="3836" selection-start-column="8" selection-end-line="3836" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/mysqlClient.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="455">
-          <caret line="37" lean-forward="true" selection-start-line="37" selection-end-line="37" />
+        <state relative-caret-position="481">
+          <caret line="39" column="31" selection-start-line="39" selection-start-column="31" selection-end-line="39" selection-end-column="31" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
@@ -384,22 +388,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/conf.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="65">
-          <caret line="5" column="23" lean-forward="true" selection-start-line="5" selection-start-column="23" selection-end-line="5" selection-end-column="23" />
+        <state relative-caret-position="78">
+          <caret line="6" column="20" selection-start-line="6" selection-start-column="20" selection-end-line="6" selection-end-column="20" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/app.js">
+    <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="78" column="28" selection-start-line="78" selection-start-column="28" selection-end-line="78" selection-end-column="28" />
+        <state relative-caret-position="390">
+          <caret line="30" column="20" selection-start-line="30" selection-start-column="20" selection-end-line="30" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fileData.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="15" column="64" selection-start-line="15" selection-start-column="64" selection-end-line="15" selection-end-column="64" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/app.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="247" column="66" selection-start-line="247" selection-start-column="66" selection-end-line="247" selection-end-column="66" />
+        <state relative-caret-position="291">
+          <caret line="108" lean-forward="true" selection-start-line="108" selection-end-line="108" />
           <folding>
             <element signature="e#0#32#0" expanded="true" />
           </folding>

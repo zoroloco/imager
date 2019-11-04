@@ -3,11 +3,12 @@ import {Logger} from './logger';
 import conf from './conf.json';
 import MySqlClient from './mysqlClient';
 import Queue from 'better-queue';
-import {query} from "winston";
+import {FileData} from './fileData';
 const gm = require('gm').subClass({imageMagick: true});
 const EventEmitter = require('events').EventEmitter;
 const fs = require('fs');
 const path = require('path');
+const uuidv4 = require('uuid/v4');
 
 const mysqlClient: MySqlClient = new MySqlClient();
 
@@ -67,77 +68,22 @@ export class App {
     }
 
     /**
-     * Verifies if the file already exists in the image table and is of correct file type.
-     *
-     * @param file
-     */
-    verifyNewFile(file:string,imageGroupId:number): Promise<any>{
-        return new Promise((resolve,reject)=>{
-            Logger.info("Processing file:"+file);
-
-            //weed out wrong file types
-            if(this.allowedFileTypes.has(path.extname(file))){
-                let query = "select * from image i where groupId = "+imageGroupId+" and path = '"+path.join(getDestDir(),file)+"'";
-                Logger.debug("Executing verify mysql query:"+query);
-
-                mysqlClient.query(query).then(results=>{
-                    if(_.isEmpty(results)){
-                        Logger.debug(file+" not found in db.");
-                        resolve();
-                    }
-                    else{
-                        reject(file+" was already found in db.");
-                    }
-
-                }).catch(err=>{
-                    reject(err);
-                });
-            }
-            else{
-                reject('Not adding:'+file+' because it is of the wrong filetype.');
-            }
-        });
-    }
-
-    /**
-     *
-     * @param file
-     */
-    copyFile(file:string) {
-        try {
-            if(!fs.existsSync(path.join(getDestDir(),file))){
-                fs.copyFileSync(path.join(conf.sourceDir, file), path.join(getDestDir(), file));
-                Logger.info('Successfully backed up file:'+file);
-                return true;
-            }
-            else{
-                Logger.info(file+' has already been backed up.');
-                return true;
-            }
-        }
-        catch(e){
-            Logger.error('Error backing up file:'+file+' with error:'+e);
-        }
-        return false;
-    }
-
-    /**
      * Processes a batch of files that have been queued up.
      * This is the callback method called by the queue.
      */
     processQueueTask(queueBulk:any, cb:any){
         let completedCount:number = 0;
 
-        function persistImage(file:string): Promise<any>{
-            Logger.info('Persisting image file:'+file+' to image group ID:'+queueBulk.imageGroupId);
+        function persistImage(fileData:FileData): Promise<any>{
+            Logger.info('Persisting image file:'+fileData.toString()+' to image group ID:'+queueBulk.imageGroupId);
             return new Promise((resolve,reject)=>{
-                mysqlClient.query("insert into image (groupId,name,path) " +
+                mysqlClient.query("insert into image (groupId,sourcePath,path) " +
                     "values(" +queueBulk.imageGroupId+","+
-                    "'" +file+ "',"+
-                    "'" +path.join(getDestDir(),file)+"'"+
+                    "'" +fileData.sourcePath+ "',"+
+                    "'" +fileData.path+"'"+
                     ")")
                     .then((result)=>{
-                        Logger.info('Successfully persisted image file:'+file+' with ID:'+result.insertId);
+                        Logger.info('Successfully persisted image file:'+fileData.toString()+' with ID:'+result.insertId);
                         resolve();
                     }).catch((err)=>{
                     reject(err);
@@ -149,19 +95,19 @@ export class App {
          * Creates a thumbnail file that is better tuned for the web.
          * @param file
          */
-        function createThumbnail(file:string): Promise<any>{
-            Logger.info('Creating thumbnail for:'+file);
+        function createThumbnail(fileData:FileData): Promise<any>{
+            Logger.info('Creating thumbnail for:'+fileData.sourcePath);
             return new Promise((resolve,reject)=>{
-                let thumbnailFileName = path.join(getDestDir(),
-                                                  path.basename(file,path.extname(file))+'_THUMB'+path.extname(file));
+                let thumbnailFileName = path.join(path.dirname(fileData.path),
+                                        path.basename(fileData.path,path.extname(fileData.path))+'_THUMB'+path.extname(fileData.path));
                 Logger.info('Creating thumbnail:'+thumbnailFileName);
 
                 //call identify to get image height and width properties.
-                gm(path.join(getDestDir(),file)).identify((err:any, props:any)=>{
+                gm(fileData.path).identify((err:any, props:any)=>{
                     if(!_.isEmpty(err)){reject(err)};
                     Logger.debug('Identify returned:'+JSON.stringify(props));
 
-                    gm(path.join(getDestDir(),file)).thumb(
+                    gm(fileData.path).thumb(
                         props.size.width/2,
                         props.size.height/2,
                                thumbnailFileName,
@@ -184,7 +130,7 @@ export class App {
         function updateCompletedCount(){
             completedCount++;
             if(completedCount === queueBulk.fileBulk.length){
-                Logger.info("All done creating thumbnails for this bulk queue task.");
+                Logger.info("All done creating thumbnails and persisting images for this bulk queue task.");
                 cb();//executing callback is a trigger that this queue task is now complete.
             }
         }
@@ -193,18 +139,18 @@ export class App {
         if(!_.isEmpty(queueBulk) && !_.isEmpty(queueBulk.fileBulk) && queueBulk.fileBulk.length>0){
             Logger.info("Processing queue task!");
 
-            for(let file of queueBulk.fileBulk){
-                Logger.info('Processing thumb for:'+file);
-                createThumbnail(file)
+            for(let fileData of queueBulk.fileBulk){
+                Logger.info('Processing thumb for:'+fileData.toString());
+                createThumbnail(fileData)
                     .then(()=>{
-                        persistImage(file)
+                        persistImage(fileData)
                             .then(()=>{
                                 updateCompletedCount();
                             }).catch(((err)=>{
-                                Logger.error('Error persisting file:'+file+' with error:'+err);
+                                Logger.error('Error persisting file:'+fileData.toString()+' with error:'+err);
                         }))
                     }).catch((err)=>{
-                        Logger.error('Error creating thumbnail for file:'+file+' with error:'+err);
+                        Logger.error('Error creating thumbnail for file:'+fileData.toString()+' with error:'+err);
                 });
             }
         }
@@ -214,26 +160,24 @@ export class App {
      * Now that files are backed up and verified, lets process the ones that need attention.
      *
      */
-    queueUpFiles(filesToProcess:Array<string>,imageGroupId:number){
-        if(!_.isEmpty(filesToProcess)){
-            Logger.info('There will be '+filesToProcess.length+' files to process.');
+    queueUpFiles(filesToProcess:Array<FileData|null>,imageGroupId:number){
+        Logger.info('There will be '+filesToProcess.length+' files to process.');
 
-            let fileBulk: Array<string> = new Array<string>();
-            let fileCount:number = 0;
+        let fileBulk: Array<FileData|null> = new Array<FileData|null>();
+        let fileCount:number = 0;
 
-            //traverse ALL files eligible for processing.
-            for(let file of filesToProcess){
-                fileCount++;
-                fileBulk.push(file);
+        //traverse ALL files eligible for processing.
+        for(let fileData of filesToProcess){
+            fileCount++;
+            fileBulk.push(fileData);
 
-                //if our bulk array is fat enough for fileBulkSize or if we have exhausted all files to process.
-                if(fileCount % conf.fileBulkSize === 0 || fileCount === filesToProcess.length){
-                    Logger.info('The files to process has now reached the max bulk size of:'+conf.fileBulkSize+' or all files exhausted.');
-                    Logger.info('Adding bulk to the queue for processing.');
-                    this.queue.push({"imageGroupId":imageGroupId, "fileBulk":fileBulk},function(){});
-                    this.queueSize++;
-                    fileBulk = new Array<string>();//reset
-                }
+            //if our bulk array is fat enough for fileBulkSize or if we have exhausted all files to process.
+            if(fileCount % conf.fileBulkSize === 0 || fileCount === filesToProcess.length){
+                Logger.info('The files to process has now reached the max bulk size of:'+conf.fileBulkSize+' or all files exhausted.');
+                Logger.info('Adding bulk to the queue for processing.');
+                this.queue.push({"imageGroupId":imageGroupId, "fileBulk":fileBulk},function(){});
+                this.queueSize++;
+                fileBulk = new Array<FileData>();//reset
             }
         }
     }
@@ -242,11 +186,11 @@ export class App {
      * check if you are all done copying all your files to backup dir.
      *
      */
-    checkIfDone(filesToProcess:Array<string>,imageGroupId:number){
+    checkIfDone(filesToProcess:Array<FileData|null>,imageGroupId:number){
         this.fileCount--;
 
         if(!_.isEmpty(filesToProcess) && filesToProcess.length>0){
-            Logger.info(this.fileCount+' files left out of '+filesToProcess.length);
+            Logger.info(this.fileCount+' files left to evaluate.');
         }
 
         //all done backing up.
@@ -296,10 +240,10 @@ export class App {
     persistDestDir(): Promise<any>{
         Logger.info('Attempting to insert into db image group:'+getDestDir());
         return new Promise((resolve,reject)=>{
-            mysqlClient.query("insert into image (name,path) " +
-                "values(" +
-                "'" +path.basename(conf.sourceDir)+ "',"+
-                "'" +getDestDir()+"'"+
+            mysqlClient.query("insert into image (sourcePath,path) " +
+                "values("+
+                "'"+conf.sourceDir+"',"+
+                "'"+getDestDir()+"'"+
                 ")")
                 .then((result)=>{
                     Logger.info('Successfully created image group for '+getDestDir());
@@ -336,26 +280,80 @@ export class App {
         });
     }
 
+    /**
+     * Verifies if the file already exists in the image table and is of correct file type.
+     *
+     * @param file
+     */
+    verifyNewFile(file:string,imageGroupId:number): Promise<any>{
+        return new Promise((resolve,reject)=>{
+            Logger.info("Processing file:"+file);
+
+            //weed out wrong file types
+            if(this.allowedFileTypes.has(path.extname(file))){
+                let query = "select * from image i where groupId = "+imageGroupId+" and sourcePath = '"+path.join(conf.sourceDir,file)+"'";
+
+                mysqlClient.query(query).then(results=>{
+                    if(_.isEmpty(results)){
+                        Logger.debug(file+" not found in db.");
+                        resolve();
+                    }
+                    else{
+                        reject(file+" was already found in db.");
+                    }
+
+                }).catch(err=>{
+                    reject(err);
+                });
+            }
+            else{
+                reject('Not adding:'+file+' because it is of the wrong filetype.');
+            }
+        });
+    }
+
+    /**
+     *
+     * @param file
+     */
+    copyFile(file:string) :FileData|null{
+        let uniqueFilename:string = uuidv4()+path.extname(file);
+        Logger.info(file+' is being renamed to:'+uniqueFilename);
+        try {
+            fs.copyFileSync(path.join(conf.sourceDir, file), path.join(getDestDir(), uniqueFilename));
+            Logger.info('Successfully backed up file:'+file+' at '+path.join(getDestDir(), uniqueFilename));
+            let fileData:FileData = new FileData();
+            fileData.sourcePath = path.join(conf.sourceDir, file);
+            fileData.path = path.join(getDestDir(), uniqueFilename);
+            return fileData;
+        }
+        catch(e){
+            Logger.error('Error backing up file:'+file+' with error:'+e);
+        }
+
+        Logger.error('Error backing up file:'+file);
+        return null;
+    }
+
     processSourceDest(imageGroupId:number){
         Logger.info("Scanning source directory:"+conf.sourceDir);
 
         fs.readdir(conf.sourceDir, (err :any, files :Array<string>)=>{
             Logger.info(files.length+" files found.");
-            //this.filesFound = files.length;
             this.fileCount = files.length;
 
-            let filesToProcess: Array<string> = new Array<string>();
+            let filesToProcess: Array<FileData|null> = new Array<FileData|null>();
 
             if(!_.isEmpty(files)){
                 for(let file of files){
                     if(file){
                         this.verifyNewFile(file,imageGroupId)
                             .then(()=>{
-                                if(this.copyFile(file)){//blocking
-                                    filesToProcess.push(file);
+                                let fileData = this.copyFile(file);
+                                if(!_.isEmpty(fileData)) {
+                                    filesToProcess.push(fileData);
                                     this.checkIfDone(filesToProcess,imageGroupId);
                                 }
-
                             }).catch((err)=>{
                             this.checkIfDone(filesToProcess,imageGroupId);
                         });
