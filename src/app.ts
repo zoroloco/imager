@@ -12,6 +12,9 @@ const uuidv4 = require('uuid/v4');
 
 const mysqlClient: MySqlClient = new MySqlClient();
 
+let srcDir:string = '';
+let destDir:string = '';
+
 /**
  * Traverses conf.imageDir files and for each filename not found in the database,
  * it will backup the file and then create a thumbnail
@@ -23,7 +26,7 @@ export enum ImagerEvents{
 }
 
 function getDestDir(){
-    return path.join(conf.destDir,path.basename(conf.sourceDir)+'_COPY');
+    return path.join(destDir,path.basename(srcDir)+'_COPY');
 }
 
 export class App {
@@ -245,7 +248,7 @@ export class App {
         return new Promise((resolve,reject)=>{
             mysqlClient.query("insert into image (sourcePath,path) " +
                 "values("+
-                "'"+conf.sourceDir+"',"+
+                "'"+srcDir+"',"+
                 "'"+getDestDir()+"'"+
                 ")")
                 .then((result)=>{
@@ -296,7 +299,7 @@ export class App {
         return new Promise((resolve,reject)=> {
             Logger.debug("Querying db for file:" + file);
 
-            let query = "select * from image i where groupId = " + imageGroupId + " and sourcePath = '" + path.join(conf.sourceDir, file) + "'";
+            let query = "select * from image i where groupId = " + imageGroupId + " and sourcePath = '" + path.join(srcDir, file) + "'";
 
             mysqlClient.query(query).then(results => {
                 if (_.isEmpty(results)) {
@@ -320,10 +323,10 @@ export class App {
         let uniqueFilename:string = uuidv4()+path.extname(file);
         Logger.info(file+' is being renamed to:'+uniqueFilename);
         try {
-            fs.copyFileSync(path.join(conf.sourceDir, file), path.join(getDestDir(), uniqueFilename));
+            fs.copyFileSync(path.join(srcDir, file), path.join(getDestDir(), uniqueFilename));
             Logger.info('Successfully backed up file:'+file+' at '+path.join(getDestDir(), uniqueFilename));
             let fileData:FileData = new FileData();
-            fileData.sourcePath = path.join(conf.sourceDir, file);
+            fileData.sourcePath = path.join(srcDir, file);
             fileData.path = path.join(getDestDir(), uniqueFilename);
             return fileData;
         }
@@ -354,9 +357,9 @@ export class App {
      * @param imageGroupId
      */
     processSourceDest(imageGroupId:number){
-        Logger.info("Scanning source directory:"+conf.sourceDir);
+        Logger.info("Scanning source directory:"+srcDir);
 
-        fs.readdir(conf.sourceDir, (err :any, files :Array<string>)=>{
+        fs.readdir(srcDir, (err :any, files :Array<string>)=>{
 
             if(!_.isEmpty(err)){
                 Logger.error(err);
@@ -364,7 +367,7 @@ export class App {
                 return;
             }
 
-            Logger.info(files.length+" total files found in src directory:"+conf.sourceDir);
+            Logger.info(files.length+" total files found in src directory:"+srcDir);
             this.sourceFileCounter = files.length;
             this.sourceFileCount = files.length;//total valid files found in the source dir.
 
@@ -398,7 +401,7 @@ export class App {
                 }
             }
             else{
-                Logger.info(conf.sourceDir+' did not contain any files.');
+                Logger.info(srcDir+' did not contain any files.');
                 this.emitter.emit(ImagerEvents.DONE);
             }
         });
@@ -409,6 +412,18 @@ export class App {
      */
     run(){
         Logger.info('--Starting execution--');
+        //0    //1          //2  //3  //4   //5
+        //node lib/index.js -src /foo -dest /bar
+        if(process.argv.length === 6){
+            srcDir = process.argv[3];
+            destDir = process.argv[5];
+        }
+
+        if(_.isEmpty(srcDir) || _.isEmpty(destDir)){
+            Logger.error('Src and Dest directories need to be specified. Please run program in the format: node lib/index.js -srcDir /foo -destDir /bar');
+            this.emitter.emit(ImagerEvents.DONE);
+        }
+
 
         this.createDestDir().then(this.queryDestDir)
             .then((queryResult:any)=>{
