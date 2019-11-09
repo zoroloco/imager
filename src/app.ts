@@ -275,12 +275,12 @@ export class App {
             mysqlClient.query("select id from image where groupId is null and path='"+getDestDir()+"'").then((data)=>{
                 Logger.info('Select query for image group ID returned:'+JSON.stringify(data));
                 if(_.isEmpty(data)){
-                    Logger.info(conf.destDir+' image group was not found in the db.');
+                    Logger.info(getDestDir()+' image group was not found in the db.');
                     resolve(null);
                 }
                 else{
                     imageGroupId = data[0].id;
-                    Logger.info(conf.destDir+' image group was already found in the db with ID:'+imageGroupId);
+                    Logger.info(getDestDir()+' image group was already found in the db with ID:'+imageGroupId);
                     resolve({"imageGroupId":imageGroupId});
                 }
 
@@ -412,18 +412,20 @@ export class App {
      */
     run(){
         Logger.info('--Starting execution--');
-        //0    //1          //2  //3  //4   //5
-        //node lib/index.js -src /foo -dest /bar
-        if(process.argv.length === 6){
-            srcDir = process.argv[3];
-            destDir = process.argv[5];
+        //0         //1        //2   //3
+        //node lib/index.js  /foo  /bar
+        if(process.argv.length === 4){
+            srcDir = process.argv[2];
+            destDir = process.argv[3];
         }
 
         if(_.isEmpty(srcDir) || _.isEmpty(destDir)){
             Logger.error('Src and Dest directories need to be specified. Please run program in the format: node lib/index.js -srcDir /foo -destDir /bar');
             this.emitter.emit(ImagerEvents.DONE);
         }
-
+        else{
+            Logger.info('Source directory:'+srcDir+' Destination directory:'+destDir);
+        }
 
         this.createDestDir().then(this.queryDestDir)
             .then((queryResult:any)=>{
