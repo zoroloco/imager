@@ -4,7 +4,7 @@
   "logger" : {
     "fileEnabled" : true,
     "dir"     : "logs",
-    "debug"   : true,
+    "debug"   : false,
     "info"    : true,
     "warn"    : true,
     "error"   : true
@@ -15,8 +15,8 @@
     "password":"zoroloco",
     "database":"druidia"
   },
-  "sourceDir" : "/Users/kcenturion/test/test",
-  "destDir":"/Volumes/druidia",
+  "sourceDir" : "/Users/kcenturion/test/sonograms",
+  "destDir":"/Users/kcenturion/test",
   "fileBulkSize": 5,
   "queueSettings":{
     "maxRetries": 1,

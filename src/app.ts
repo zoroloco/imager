@@ -29,7 +29,8 @@ function getDestDir(){
 export class App {
 
     private allowedFileTypes: Set<string>
-    private fileCount: number = 0;
+    private sourceFileCounter: number = 0;//the current count of image files in src dir
+    private sourceFileCount: number = 0;//the total image files in src dir
     private queue: Queue;
     private queueSize: number = 0;
     private emitter: any;
@@ -140,7 +141,7 @@ export class App {
             Logger.info("Processing queue task!");
 
             for(let fileData of queueBulk.fileBulk){
-                Logger.info('Processing thumb for:'+fileData.toString());
+                Logger.debug('Processing thumb for:'+fileData.toString());
                 createThumbnail(fileData)
                     .then(()=>{
                         persistImage(fileData)
@@ -187,22 +188,24 @@ export class App {
      *
      */
     checkIfDone(filesToProcess:Array<FileData|null>,imageGroupId:number){
-        this.fileCount--;
+        this.sourceFileCounter--;
+
+        Logger.info(this.sourceFileCounter+' files remain to be processed.');
 
         if(!_.isEmpty(filesToProcess) && filesToProcess.length>0){
-            Logger.info(this.fileCount+' files left to evaluate.');
+            Logger.info(this.sourceFileCounter+' files left to evaluate.');
         }
 
         //all done backing up.
-        if(!this.fileCount){
-            Logger.info('File count is now:'+this.fileCount);
+        if(!this.sourceFileCounter){//exhausted going through all files in src dir
+            Logger.info('File count is now:'+this.sourceFileCounter);
 
             //if files to process, then lets queue them up.
             if(!_.isEmpty(filesToProcess) && filesToProcess.length>0){
                 //now lets just do a sanity check to make sure ALL files were backed up!
                 fs.readdir(getDestDir(), (err :any, copiedFiles :Array<string>)=> {
-                    //TODO: filter out thumbs to get an accurate count!
-                    //Logger.warn(copiedFiles.length + ' files out of '+filesToProcess.length+' were copied to destination directory.');
+                    Logger.info(copiedFiles.length + ' total files exist in the dest directory.');
+                    Logger.info(this.sourceFileCount+' total files exist in the src directory.');
                     this.queueUpFiles(filesToProcess,imageGroupId);
                 });
             }
@@ -255,6 +258,10 @@ export class App {
         });
     }
 
+    /**
+     *
+     * Figure out if the dest already exists in the DB.
+     */
     queryDestDir(): Promise<any> {
         Logger.info('Fetching the group image ID from the db for '+getDestDir());
         let imageGroupId:number;
@@ -281,34 +288,27 @@ export class App {
     }
 
     /**
-     * Verifies if the file already exists in the image table and is of correct file type.
+     * Verifies if the file already exists in the image table.
      *
      * @param file
      */
-    verifyNewFile(file:string,imageGroupId:number): Promise<any>{
-        return new Promise((resolve,reject)=>{
-            Logger.info("Processing file:"+file);
+    queryFile(file:string,imageGroupId:number): Promise<any>{
+        return new Promise((resolve,reject)=> {
+            Logger.debug("Querying db for file:" + file);
 
-            //weed out wrong file types
-            if(this.allowedFileTypes.has(path.extname(file))){
-                let query = "select * from image i where groupId = "+imageGroupId+" and sourcePath = '"+path.join(conf.sourceDir,file)+"'";
+            let query = "select * from image i where groupId = " + imageGroupId + " and sourcePath = '" + path.join(conf.sourceDir, file) + "'";
 
-                mysqlClient.query(query).then(results=>{
-                    if(_.isEmpty(results)){
-                        Logger.debug(file+" not found in db.");
-                        resolve();
-                    }
-                    else{
-                        reject(file+" was already found in db.");
-                    }
+            mysqlClient.query(query).then(results => {
+                if (_.isEmpty(results)) {
+                    Logger.debug(file + " not found in db.");
+                    resolve();
+                } else {
+                    reject(file + " was already found in db.");
+                }
 
-                }).catch(err=>{
-                    reject(err);
-                });
-            }
-            else{
-                reject('Not adding:'+file+' because it is of the wrong filetype.');
-            }
+            }).catch(err => {
+                reject(err);
+            });
         });
     }
 
@@ -335,34 +335,71 @@ export class App {
         return null;
     }
 
+    /**
+     *
+     * @param file
+     */
+    verifyFileType(file:string): boolean{
+        if(this.allowedFileTypes.has(path.extname(file))) {
+            return true;
+        }
+        else{
+            Logger.warn('Not adding:'+file+' because it is of the wrong filetype.');
+            return false;
+        }
+    }
+
+    /**
+     *
+     * @param imageGroupId
+     */
     processSourceDest(imageGroupId:number){
         Logger.info("Scanning source directory:"+conf.sourceDir);
 
         fs.readdir(conf.sourceDir, (err :any, files :Array<string>)=>{
-            Logger.info(files.length+" files found.");
-            this.fileCount = files.length;
 
+            if(!_.isEmpty(err)){
+                Logger.error(err);
+                this.emitter.emit(ImagerEvents.DONE);
+                return;
+            }
+
+            Logger.info(files.length+" total files found in src directory:"+conf.sourceDir);
+            this.sourceFileCounter = files.length;
+            this.sourceFileCount = files.length;//total valid files found in the source dir.
+
+            //this array contains files that do not exist already in the db.
             let filesToProcess: Array<FileData|null> = new Array<FileData|null>();
 
             if(!_.isEmpty(files)){
                 for(let file of files){
                     if(file){
-                        this.verifyNewFile(file,imageGroupId)
-                            .then(()=>{
-                                let fileData = this.copyFile(file);
-                                if(!_.isEmpty(fileData)) {
-                                    filesToProcess.push(fileData);
+                        if(this.verifyFileType(file)){
+                            this.queryFile(file,imageGroupId)
+                                .then(()=>{
+                                    let fileData = this.copyFile(file);
+                                    if(!_.isEmpty(fileData)) {
+                                        filesToProcess.push(fileData);
+                                        this.checkIfDone(filesToProcess,imageGroupId);
+                                    }
+                                    else{
+                                        this.checkIfDone(filesToProcess,imageGroupId);
+                                    }
+                                })
+                                .catch((err)=>{
                                     this.checkIfDone(filesToProcess,imageGroupId);
-                                }
-                            }).catch((err)=>{
+                            });
+                        }
+                        else{
+                            this.sourceFileCount--;
                             this.checkIfDone(filesToProcess,imageGroupId);
-                        });
+                        }
                     }
                 }
             }
-
-            if(err){
-                Logger.error(err);
+            else{
+                Logger.info(conf.sourceDir+' did not contain any files.');
+                this.emitter.emit(ImagerEvents.DONE);
             }
         });
     }
@@ -379,7 +416,10 @@ export class App {
                     this.persistDestDir()
                         .then((insertResult:any)=>{
                             this.processSourceDest(insertResult.imageGroupId);
-                        }).catch((err)=>{'Error persisting dest dir:'+err});
+                        }).catch((err)=>{
+                            Logger.error('Error persisting dest dir:'+err);
+                            this.emitter.emit(ImagerEvents.DONE);
+                        });
                 }
                 else{
                     this.processSourceDest(queryResult.imageGroupId);
@@ -387,6 +427,7 @@ export class App {
             })
             .catch((err)=>{
                 Logger.error('Error querying destination directory:'+err);
+                this.emitter.emit(ImagerEvents.DONE);
             })
 
     }//run
