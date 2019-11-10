@@ -190,7 +190,7 @@ export class App {
      * check if you are all done copying all your files to backup dir.
      *
      */
-    checkIfDone(filesToProcess:Array<FileData|null>,imageGroupId:number){
+    checkIfCopyDone(filesToProcess:Array<FileData|null>,imageGroupId:number){
         this.sourceFileCounter--;
 
         Logger.info(this.sourceFileCounter+' files remain to be processed.');
@@ -209,10 +209,19 @@ export class App {
                 fs.readdir(getDestDir(), (err :any, copiedFiles :Array<string>)=> {
                     Logger.info(copiedFiles.length + ' total files exist in the dest directory.');
                     Logger.info(this.sourceFileCount+' total files exist in the src directory.');
-                    this.queueUpFiles(filesToProcess,imageGroupId);
+                    //now verify ALL files were copied before proceeding.
+                    if(copiedFiles.length === this.sourceFileCount){
+                        Logger.info('ALL files were successfully copied.');
+                        this.queueUpFiles(filesToProcess,imageGroupId);
+                    }
+                    else{
+                        Logger.info(copiedFiles.length+' files were copied out of '+this.sourceFileCount+' files.');
+                        this.emitter.emit(ImagerEvents.DONE);
+                    }
                 });
             }
             else{
+                Logger.info('No files to process.');
                 this.emitter.emit(ImagerEvents.DONE);
             }
         }
@@ -383,19 +392,19 @@ export class App {
                                     let fileData = this.copyFile(file);
                                     if(!_.isEmpty(fileData)) {
                                         filesToProcess.push(fileData);
-                                        this.checkIfDone(filesToProcess,imageGroupId);
+                                        this.checkIfCopyDone(filesToProcess,imageGroupId);
                                     }
                                     else{
-                                        this.checkIfDone(filesToProcess,imageGroupId);
+                                        this.checkIfCopyDone(filesToProcess,imageGroupId);
                                     }
                                 })
                                 .catch((err)=>{
-                                    this.checkIfDone(filesToProcess,imageGroupId);
+                                    this.checkIfCopyDone(filesToProcess,imageGroupId);
                             });
                         }
                         else{
                             this.sourceFileCount--;
-                            this.checkIfDone(filesToProcess,imageGroupId);
+                            this.checkIfCopyDone(filesToProcess,imageGroupId);
                         }
                     }
                 }
@@ -420,7 +429,7 @@ export class App {
         }
 
         if(_.isEmpty(srcDir) || _.isEmpty(destDir)){
-            Logger.error('Src and Dest directories need to be specified. Please run program in the format: node lib/index.js -srcDir /foo -destDir /bar');
+            Logger.error('Src and Dest directories need to be specified. Please run program in the format: node lib/index.js /src /dest');
             this.emitter.emit(ImagerEvents.DONE);
         }
         else{

@@ -15,8 +15,6 @@
         "password": "zoroloco",
         "database": "druidia"
     },
-    "sourceDir": "/Users/kcenturion/test/sonograms",
-    "destDir": "/Users/kcenturion/test",
     "fileBulkSize": 5,
     "queueSettings": {
         "maxRetries": 1,
