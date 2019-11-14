@@ -138,19 +138,25 @@ export class App {
                     if(!_.isEmpty(err)){reject(err)};
                     Logger.debug('Identify returned:'+JSON.stringify(props));
 
-                    gm(fileData.path).thumb(
-                        props.size.width/2,
-                        props.size.height/2,
-                               thumbnailFileName,
-                               conf.thumbnailSettings.quality,
-                        (err:any)=>{
-                            if(!_.isEmpty(err)){
-                                reject(err);
-                            }
-                            else{
-                                resolve();
-                            }
-                        });
+                    if(!_.isEmpty(props) && !_.isEmpty(props.size) && !_.isEmpty(props.size.width) && !_.isEmpty(props.size.height)){
+                        gm(fileData.path).thumb(
+                            props.size.width/2,
+                            props.size.height/2,
+                            thumbnailFileName,
+                            conf.thumbnailSettings.quality,
+                            (err:any)=>{
+                                if(!_.isEmpty(err)){
+                                    reject(err);
+                                }
+                                else{
+                                    resolve();
+                                }
+                            });
+                    }
+                    else{
+                        reject('File:'+fileData.path+' did not contain valid EXIF data and a thumbnail could not be created.');
+                    }
+
                 });
             });
         }
@@ -183,6 +189,8 @@ export class App {
                         }))
                     }).catch((err)=>{
                     Logger.error('Error creating thumbnail for file:'+fileData.toString()+' with error:'+err);
+                }).catch((err)=>{
+                    Logger.error(err);
                 });
 
             }
