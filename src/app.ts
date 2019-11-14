@@ -26,7 +26,7 @@ export enum ImagerEvents{
 }
 
 function getDestDir(){
-    return path.join(destDir,path.basename(srcDir)+'_COPY');
+    return path.join(destDir,path.basename(srcDir));
 }
 
 export class App {
