@@ -81,10 +81,11 @@ export class App {
         function persistImage(fileData:FileData): Promise<any>{
             Logger.info('Persisting image file:'+fileData.toString()+' to image group ID:'+queueBulk.imageGroupId);
             return new Promise((resolve,reject)=>{
-                mysqlClient.query("insert into image (groupId,sourcePath,path) " +
+                mysqlClient.query("insert into image (groupId,sourcePath,path,createdBy) " +
                     "values(" +queueBulk.imageGroupId+","+
                     "'" +fileData.sourcePath+ "',"+
-                    "'" +fileData.path+"'"+
+                    "'" +fileData.path+"',"+
+                    4+","+//my user id
                     ")")
                     .then((result)=>{
                         Logger.info('Successfully persisted image file:'+fileData.toString()+' with ID:'+result.insertId);
@@ -94,6 +95,32 @@ export class App {
                 });
             });
         }
+
+        /*
+        function autoOrient(fileData:FileData): Promise<any>{
+            Logger.info('Attempting to auto-orient file:'+fileData.sourcePath);
+            return new Promise((resolve,reject)=> {
+                let ext:string = path.extname(fileData.path);
+                if(ext === 'JPG' || ext === 'JPEG' || ext === 'jpg' || ext === 'jpeg'){
+                    gm(path.join(path.dirname(fileData.path)))
+                        .autoOrient()
+                        .write(path.join(path.dirname(fileData.path)), function (err:any) {
+                            if (err){
+                                reject('Error encountered trying to auto orient file:'+fileData.path+' with error:'+err);
+                            }
+                            else{
+                                Logger.info('Successfully auto oriented file:'+fileData.path);
+                                resolve();
+                            }
+                        });
+                }
+                else{
+                    Logger.info('Will not try to auto orient file if it is not of type jpg/jpeg');
+                    resolve();
+                }
+            });
+        }
+        */
 
         /**
          * Creates a thumbnail file that is better tuned for the web.
@@ -139,23 +166,25 @@ export class App {
             }
         }
 
-        //main flow
+        //main flow of queue task that is processing.
         if(!_.isEmpty(queueBulk) && !_.isEmpty(queueBulk.fileBulk) && queueBulk.fileBulk.length>0){
             Logger.info("Processing queue task!");
 
             for(let fileData of queueBulk.fileBulk){
                 Logger.debug('Processing thumb for:'+fileData.toString());
+
                 createThumbnail(fileData)
                     .then(()=>{
                         persistImage(fileData)
                             .then(()=>{
                                 updateCompletedCount();
                             }).catch(((err)=>{
-                                Logger.error('Error persisting file:'+fileData.toString()+' with error:'+err);
+                            Logger.error('Error persisting file:'+fileData.toString()+' with error:'+err);
                         }))
                     }).catch((err)=>{
-                        Logger.error('Error creating thumbnail for file:'+fileData.toString()+' with error:'+err);
+                    Logger.error('Error creating thumbnail for file:'+fileData.toString()+' with error:'+err);
                 });
+
             }
         }
     }
