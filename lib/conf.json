@@ -4,7 +4,7 @@
     "logger": {
         "fileEnabled": true,
         "dir": "logs",
-        "debug": false,
+        "debug": true,
         "info": true,
         "warn": true,
         "error": true

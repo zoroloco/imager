@@ -9,6 +9,11 @@ CREATE TABLE `user` (
 CREATE TABLE `image` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `groupId` bigint(20) DEFAULT NULL,
+  `format` varchar(32) DEFAULT NULL,
+  `mimeType` varchar(32) DEFAULT NULL,
+  `resolution` varchar(16) DEFAULT NULL,
+  `width` int(11) DEFAULT NULL,
+  `height` int(11) DEFAULT NULL,
   `privacyFlag` tinyint(4) DEFAULT 0,
   `path` varchar(128) NOT NULL,
   `sourcePath` varchar(128) NOT NULL,
@@ -20,7 +25,7 @@ CREATE TABLE `image` (
   KEY `modifiedBy` (`modifiedBy`),
   CONSTRAINT `image_ibfk_1` FOREIGN KEY (`createdBy`) REFERENCES `user` (`id`),
   CONSTRAINT `image_ibfk_2` FOREIGN KEY (`modifiedBy`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=224 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=400 DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `image_tag` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,

@@ -81,11 +81,14 @@ export class App {
         function persistImage(fileData:FileData): Promise<any>{
             Logger.info('Persisting image file:'+fileData.toString()+' to image group ID:'+queueBulk.imageGroupId);
             return new Promise((resolve,reject)=>{
-                mysqlClient.query("insert into image (groupId,sourcePath,path,createdBy) " +
+                mysqlClient.query("insert into image (groupId,sourcePath,path,width,height,resolution,mimeType,format,createdBy) " +
                     "values(" +queueBulk.imageGroupId+","+
                     "'" +fileData.sourcePath+ "',"+
-                    "'" +fileData.path+"',"+
-                    4+","+//my user id
+                    "'" +fileData.path+"',"+fileData.width+","+fileData.height+","+
+                    "'" +fileData.resolution+"',"+
+                    "'" +fileData.mimeType+"',"+
+                    "'" +fileData.format+"',"+
+                    4+//my user id
                     ")")
                     .then((result)=>{
                         Logger.info('Successfully persisted image file:'+fileData.toString()+' with ID:'+result.insertId);
@@ -138,20 +141,35 @@ export class App {
                     if(!_.isEmpty(err)){reject(err)};
                     Logger.debug('Identify returned:'+JSON.stringify(props));
 
-                    if(!_.isEmpty(props) && !_.isEmpty(props.size) && !_.isEmpty(props.size.width) && !_.isEmpty(props.size.height)){
-                        gm(fileData.path).thumb(
-                            props.size.width/2,
-                            props.size.height/2,
-                            thumbnailFileName,
-                            conf.thumbnailSettings.quality,
-                            (err:any)=>{
-                                if(!_.isEmpty(err)){
-                                    reject(err);
-                                }
-                                else{
-                                    resolve();
-                                }
-                            });
+                    if(!_.isEmpty(props)){
+                        if(props.hasOwnProperty('format'))
+                            fileData.format = props.format;
+                        if(props.hasOwnProperty('Mime type'))
+                            fileData.mimeType = props["Mime type"];
+                        if(props.hasOwnProperty("Resolution"))
+                            fileData.resolution = props.Resolution;
+
+                        if(props.hasOwnProperty('size')){
+                            fileData.height = props.size.height;
+                            fileData.width = props.size.width;
+
+                            gm(fileData.path).thumb(
+                                props.size.width/2,
+                                props.size.height/2,
+                                thumbnailFileName,
+                                conf.thumbnailSettings.quality,
+                                (err:any)=>{
+                                    if(!_.isEmpty(err)){
+                                        reject(err);
+                                    }
+                                    else{
+                                        resolve(fileData);
+                                    }
+                                });
+                        }
+                        else{
+                            reject('File:'+fileData.path+' did not contain valid EXIF data and a thumbnail could not be created.');
+                        }
                     }
                     else{
                         reject('File:'+fileData.path+' did not contain valid EXIF data and a thumbnail could not be created.');
@@ -180,7 +198,7 @@ export class App {
                 Logger.debug('Processing thumb for:'+fileData.toString());
 
                 createThumbnail(fileData)
-                    .then(()=>{
+                    .then((fileData)=>{
                         persistImage(fileData)
                             .then(()=>{
                                 updateCompletedCount();
@@ -292,10 +310,10 @@ export class App {
     persistDestDir(): Promise<any>{
         Logger.info('Attempting to insert into db image group:'+getDestDir());
         return new Promise((resolve,reject)=>{
-            mysqlClient.query("insert into image (sourcePath,path) " +
+            mysqlClient.query("insert into image (sourcePath,path,createdBy) " +
                 "values("+
                 "'"+srcDir+"',"+
-                "'"+getDestDir()+"'"+
+                "'"+getDestDir()+"',"+4+//my user id
                 ")")
                 .then((result)=>{
                     Logger.info('Successfully created image group for '+getDestDir());
