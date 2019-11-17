@@ -16,6 +16,28 @@ let srcDir:string = '';
 let destDir:string = '';
 
 /**
+
+ 1        2       3      4         5            6           7          8
+
+ 888888  888888      88  88      8888888888  88                  88  8888888888
+ 88          88      88  88      88  88      88  88          88  88      88  88
+ 8888      8888    8888  8888    88          8888888888  8888888888          88
+ 88          88      88  88
+ 88          88  888888  888888
+
+ */
+export enum ExifOrientation{
+    TOP_LEFT = 1,
+    TOP_RIGHT,
+    BOTTOM_RIGHT,
+    BOTTOM_LEFT,
+    LEFT_TOP,
+    RIGHT_TOP,
+    RIGHT_BOTTOM,
+    LEFT_BOTTOM
+}
+
+/**
  * Traverses conf.imageDir files and for each filename not found in the database,
  * it will backup the file and then create a thumbnail
  * finally save the file meta-data to the db.
@@ -81,13 +103,16 @@ export class App {
         function persistImage(fileData:FileData): Promise<any>{
             Logger.info('Persisting image file:'+fileData.toString()+' to image group ID:'+queueBulk.imageGroupId);
             return new Promise((resolve,reject)=>{
-                mysqlClient.query("insert into image (groupId,sourcePath,path,width,height,resolution,mimeType,format,createdBy) " +
+                mysqlClient.query("insert into image (groupId,sourcePath,path,width,height,mimeType,format,resolution,orientation,cameraModel,createdBy) " +
                     "values(" +queueBulk.imageGroupId+","+
                     "'" +fileData.sourcePath+ "',"+
-                    "'" +fileData.path+"',"+fileData.width+","+fileData.height+","+
-                    "'" +fileData.resolution+"',"+
-                    "'" +fileData.mimeType+"',"+
-                    "'" +fileData.format+"',"+
+                    "'" +fileData.path+"',"+
+                    fileData.width+","+fileData.height+","+
+                    (!_.isEmpty(fileData.mimeType) ? "'"+fileData.mimeType+"'" : "''")+","+
+                    (!_.isEmpty(fileData.format) ? "'"+fileData.format+"'" : "''")+","+
+                    (!_.isEmpty(fileData.resolution) ? "'"+fileData.resolution+"'" : "''")+","+
+                    (!_.isEmpty(fileData.orientation) ? "'"+fileData.orientation+"'" : "''")+","+
+                    (!_.isEmpty(fileData.cameraModel) ? "'"+fileData.cameraModel+"'" : "''")+","+
                     4+//my user id
                     ")")
                     .then((result)=>{
@@ -99,42 +124,74 @@ export class App {
             });
         }
 
-        /*
-        function autoOrient(fileData:FileData): Promise<any>{
-            Logger.info('Attempting to auto-orient file:'+fileData.sourcePath);
+        /**
+         * When you view an image in a browser or file explorer, it uses the EXIF data to see if the image was shot upside down or
+         * at some non-normal orientation.  The browser uses that EXIF data to properly display the image to you. When you create a
+         * thumbnail, all this EXIF meta-data is stripped out, so the browser/OS will not know how to auto orient and you will see the
+         * image as-is, which is the way it was shot.  In the createThumbnail method we captured the orientation value and we use it in
+         * this method to correctly rotate the thumbnail so it will match the original pic.
+         *
+         * @param fileData
+         */
+        function autoOrientThumb(fileData:FileData): Promise<any>{
+            Logger.info('Attempting to auto-orient file:'+fileData.thumbPath+ ' with orientation value of:'+fileData.orientation);
             return new Promise((resolve,reject)=> {
-                let ext:string = path.extname(fileData.path);
-                if(ext === 'JPG' || ext === 'JPEG' || ext === 'jpg' || ext === 'jpeg'){
-                    gm(path.join(path.dirname(fileData.path)))
-                        .autoOrient()
-                        .write(path.join(path.dirname(fileData.path)), function (err:any) {
-                            if (err){
-                                reject('Error encountered trying to auto orient file:'+fileData.path+' with error:'+err);
-                            }
-                            else{
-                                Logger.info('Successfully auto oriented file:'+fileData.path);
-                                resolve();
-                            }
-                        });
+                //gm(fileData.path).rotate()
+                if(!_.isEmpty(fileData.orientation)){
+                    Logger.info('Orientation found of:'+fileData.orientation);
+                    if(fileData.orientation === ExifOrientation.TOP_LEFT+''){
+                        Logger.info('Orientation is left top normal. No need to auto orient.');
+                        resolve(fileData);
+                    }
+                    else{
+                        Logger.info('Orientation of:'+fileData.orientation+' found. There is a need to auto orient.');
+                        let rotationAngle:number = 0;
+                        switch(fileData.orientation){
+                            case ExifOrientation.BOTTOM_RIGHT+'':
+                                rotationAngle = 180;
+                                break;
+                            case ExifOrientation.RIGHT_TOP+'':
+                                rotationAngle = 90;
+                                break;
+                            default:
+                                break;
+                        }
+
+                        if(rotationAngle>0){
+                            Logger.info('Attempting to flip thumb image '+rotationAngle+' degrees.');
+                            gm(fileData.thumbPath).rotate('white',rotationAngle)
+                                .write(fileData.thumbPath,   (err:any)=>{
+                                    if(!_.isEmpty(err)){
+                                        reject(err);
+                                    }
+                                    else{
+                                        resolve(fileData);
+                                    }
+                                });
+                        }
+                        else{
+                            resolve(fileData);
+                        }
+                    }
                 }
                 else{
-                    Logger.info('Will not try to auto orient file if it is not of type jpg/jpeg');
-                    resolve();
+                    resolve(fileData);
                 }
             });
         }
-        */
 
         /**
-         * Creates a thumbnail file that is better tuned for the web.
+         * Creates a thumbnail file that is better tuned for the web.  Note: thumbnail creation also
+         * strips out all EXIF meta-data. This is captured though in our fileData object.
+         *
          * @param file
          */
         function createThumbnail(fileData:FileData): Promise<any>{
             Logger.info('Creating thumbnail for:'+fileData.sourcePath);
             return new Promise((resolve,reject)=>{
-                let thumbnailFileName = path.join(path.dirname(fileData.path),
+                fileData.thumbPath = path.join(path.dirname(fileData.path),
                                         path.basename(fileData.path,path.extname(fileData.path))+'_THUMB'+path.extname(fileData.path));
-                Logger.info('Creating thumbnail:'+thumbnailFileName);
+                Logger.info('Creating thumbnail:'+fileData.thumbPath);
 
                 //call identify to get image height and width properties.
                 gm(fileData.path).identify((err:any, props:any)=>{
@@ -148,6 +205,10 @@ export class App {
                             fileData.mimeType = props["Mime type"];
                         if(props.hasOwnProperty("Resolution"))
                             fileData.resolution = props.Resolution;
+                        if(props.hasOwnProperty('Properties')) {
+                            fileData.orientation = props.Properties['exif:Orientation'];
+                            fileData.cameraModel = props.Properties['exif:Model'];
+                        }
 
                         if(props.hasOwnProperty('size')){
                             fileData.height = props.size.height;
@@ -156,7 +217,7 @@ export class App {
                             gm(fileData.path).thumb(
                                 props.size.width/2,
                                 props.size.height/2,
-                                thumbnailFileName,
+                                fileData.thumbPath,
                                 conf.thumbnailSettings.quality,
                                 (err:any)=>{
                                     if(!_.isEmpty(err)){
@@ -197,8 +258,11 @@ export class App {
             for(let fileData of queueBulk.fileBulk){
                 Logger.debug('Processing thumb for:'+fileData.toString());
 
+                createThumbnail(fileData).then(autoOrientThumb).then(persistImage).then(updateCompletedCount)
+                    .catch((err)=>{Logger.error(err)});
+                /*
                 createThumbnail(fileData)
-                    .then((fileData)=>{
+                    .then(autoOrient(fileData).then(fileData)=>{
                         persistImage(fileData)
                             .then(()=>{
                                 updateCompletedCount();
@@ -210,6 +274,7 @@ export class App {
                 }).catch((err)=>{
                     Logger.error(err);
                 });
+                */
 
             }
         }
