@@ -2,18 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="be9186f4-1f1a-47dd-abf5-439bb2da600f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/dml.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/app.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/fileData.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/fileData.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/fileData.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/lib/fileData.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql/ddl.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/ddl.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql/dml.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/dml.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fileData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/fileData.ts" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -51,13 +44,6 @@
         <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
         <item name="druidia: schema" type="ebfa3cd1:MariaImplModel$Schema" />
       </path>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="MySQL - druidia@localhost" type="feb32156:DbDataSourceImpl" />
-        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
-        <item name="druidia: schema" type="ebfa3cd1:MariaImplModel$Schema" />
-        <item name="image: table" type="dbc44a63:MariaImplModel$Table" />
-      </path>
     </expand>
     <select />
   </component>
@@ -68,11 +54,11 @@
           <provider selected="true" editor-type-id="terminal-session-editor" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="127">
-              <caret line="109" column="59" selection-start-line="109" selection-start-column="59" selection-end-line="109" selection-end-column="59" />
+            <state relative-caret-position="131">
+              <caret line="109" column="46" selection-start-line="109" selection-start-column="46" selection-end-line="109" selection-end-column="46" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
@@ -80,20 +66,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/logs/imager-16-11-2019.log">
-          <provider selected="true" editor-type-id="LogFileEditorProvider">
-            <state relative-caret-position="355">
-              <caret line="1648" column="146" selection-start-line="1648" selection-start-column="146" selection-end-line="1648" selection-end-column="146" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/523e7220-051e-4d1f-9818-388d5d2b0a39/console.sql">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="17" selection-end-column="19" />
+            <state relative-caret-position="78">
+              <caret line="6" selection-start-line="6" selection-end-line="6" />
             </state>
           </provider>
         </entry>
@@ -101,8 +78,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/conf.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="78">
-              <caret line="6" column="20" selection-start-line="6" selection-start-column="20" selection-end-line="6" selection-end-column="20" />
+            <state relative-caret-position="117">
+              <caret line="9" column="20" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -118,18 +95,14 @@
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sql/dml.sql">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="91">
-              <caret line="7" selection-start-line="7" selection-end-line="15" selection-end-column="7" />
-            </state>
-          </provider>
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sql/ddl.sql">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="23" column="32" selection-start-line="23" selection-start-column="32" selection-end-line="23" selection-end-column="32" />
+            <state relative-caret-position="114">
+              <caret line="16" column="38" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -138,7 +111,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>checkifdone</find>
       <find>verify</find>
       <find>processSourceDest</find>
       <find>warn</find>
@@ -167,6 +139,7 @@
       <find>rotate</find>
       <find>toString</find>
       <find>f54446f</find>
+      <find>`</find>
       <find>attempting to au</find>
     </findStrings>
     <replaceStrings>
@@ -190,12 +163,13 @@
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/sql/ddl.sql" />
-        <option value="$PROJECT_DIR$/sql/dml.sql" />
-        <option value="$APPLICATION_CONFIG_DIR$/consoles/db/523e7220-051e-4d1f-9818-388d5d2b0a39/console.sql" />
         <option value="$PROJECT_DIR$/src/fileData.ts" />
         <option value="$PROJECT_DIR$/src/conf.json" />
+        <option value="523e7220-051e-4d1f-9818-388d5d2b0a39/schema/druidia/table/image_tag.sql" />
+        <option value="$PROJECT_DIR$/sql/dml.sql" />
         <option value="$PROJECT_DIR$/src/app.ts" />
+        <option value="$PROJECT_DIR$/sql/ddl.sql" />
+        <option value="$APPLICATION_CONFIG_DIR$/consoles/db/523e7220-051e-4d1f-9818-388d5d2b0a39/console.sql" />
       </list>
     </option>
   </component>
@@ -228,11 +202,6 @@
             <path>
               <item name="imager" type="b2602c69:ProjectViewProjectNode" />
               <item name="imager" type="462c0819:PsiDirectoryNode" />
-              <item name="logs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="imager" type="b2602c69:ProjectViewProjectNode" />
-              <item name="imager" type="462c0819:PsiDirectoryNode" />
               <item name="sql" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -256,7 +225,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+    <property name="settings.editor.selected.configurable" value="database.main" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
   </component>
   <component name="RecentsManager">
@@ -313,23 +282,23 @@
       <workItem from="1573696987562" duration="13801000" />
       <workItem from="1573918367320" duration="273000" />
       <workItem from="1573920291582" duration="657000" />
-      <workItem from="1573936705388" duration="8927000" />
+      <workItem from="1573936705388" duration="15099000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="89078000" />
+    <option name="totallyTimeSpent" value="95250000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18739903" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4964789" visible="true" weight="0.18739903" />
+      <window_info id="Structure" order="1" sideWeight="0.50352114" side_tool="true" weight="0.18739903" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info id="Project Explorer" order="4" />
-      <window_info id="DB Browser" order="5" />
+      <window_info id="DB Browser" order="5" weight="0.32956383" />
       <window_info id="Job Explorer" order="6" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -344,7 +313,7 @@
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" weight="0.32956153" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.32531825" />
       <window_info anchor="bottom" id="Console" order="12" />
-      <window_info active="true" anchor="bottom" id="Database Console" order="13" visible="true" weight="0.29278642" />
+      <window_info active="true" anchor="bottom" id="Database Console" order="13" visible="true" weight="0.4526167" />
       <window_info anchor="bottom" id="DB Execution Console" order="14" />
       <window_info anchor="bottom" id="Database Changes" order="15" weight="0.32956153" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -493,13 +462,6 @@
         <state relative-caret-position="-791" />
       </provider>
     </entry>
-    <entry file="das://523e7220-051e-4d1f-9818-388d5d2b0a39/schema/druidia/table/image.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="13">
-          <caret line="1" column="13" selection-start-line="1" selection-start-column="13" selection-end-line="1" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="247">
@@ -527,20 +489,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sql/ddl.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="23" column="32" selection-start-line="23" selection-start-column="32" selection-end-line="23" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sql/dml.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="91">
-          <caret line="7" selection-start-line="7" selection-end-line="15" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fileData.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="373">
@@ -548,34 +496,65 @@
         </state>
       </provider>
     </entry>
+    <entry file="das://523e7220-051e-4d1f-9818-388d5d2b0a39/schema/druidia/table/image_tag.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="13">
+          <caret line="1" selection-start-line="1" selection-end-line="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://523e7220-051e-4d1f-9818-388d5d2b0a39/schema/druidia/table/image.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="13">
+          <caret line="1" selection-start-line="1" selection-end-line="29" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/conf.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="78">
-          <caret line="6" column="20" selection-start-line="6" selection-start-column="20" selection-end-line="6" selection-end-column="20" />
+        <state relative-caret-position="117">
+          <caret line="9" column="20" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/logs/imager-16-11-2019.log">
       <provider selected="true" editor-type-id="LogFileEditorProvider">
-        <state relative-caret-position="355">
+        <state relative-caret-position="-7289">
           <caret line="1648" column="146" selection-start-line="1648" selection-start-column="146" selection-end-line="1648" selection-end-column="146" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/523e7220-051e-4d1f-9818-388d5d2b0a39/console.sql">
+    <entry file="file://$PROJECT_DIR$/logs/imager-18-11-2019.log">
+      <provider selected="true" editor-type-id="LogFileEditorProvider">
+        <state relative-caret-position="212">
+          <caret line="2987" column="43" selection-start-line="2987" selection-start-column="43" selection-end-line="2987" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sql/dml.sql">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sql/ddl.sql">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="17" selection-end-column="19" />
+        <state relative-caret-position="114">
+          <caret line="16" column="38" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/app.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="127">
-          <caret line="109" column="59" selection-start-line="109" selection-start-column="59" selection-end-line="109" selection-end-column="59" />
+        <state relative-caret-position="131">
+          <caret line="109" column="46" selection-start-line="109" selection-start-column="46" selection-end-line="109" selection-end-column="46" />
           <folding>
             <element signature="e#0#32#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/523e7220-051e-4d1f-9818-388d5d2b0a39/console.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="78">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
         </state>
       </provider>
     </entry>

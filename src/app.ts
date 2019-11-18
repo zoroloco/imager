@@ -103,10 +103,11 @@ export class App {
         function persistImage(fileData:FileData): Promise<any>{
             Logger.info('Persisting image file:'+fileData.toString()+' to image group ID:'+queueBulk.imageGroupId);
             return new Promise((resolve,reject)=>{
-                mysqlClient.query("insert into image (groupId,sourcePath,path,width,height,mimeType,format,resolution,orientation,cameraModel,createdBy) " +
+                mysqlClient.query("insert into image (groupId,sourcePath,path,thumbPath,width,height,mimeType,format,resolution,orientation,cameraModel,createdBy) " +
                     "values(" +queueBulk.imageGroupId+","+
                     "'" +fileData.sourcePath+ "',"+
                     "'" +fileData.path+"',"+
+                    "'" +fileData.thumbPath+"',"+
                     fileData.width+","+fileData.height+","+
                     (!_.isEmpty(fileData.mimeType) ? "'"+fileData.mimeType+"'" : "''")+","+
                     (!_.isEmpty(fileData.format) ? "'"+fileData.format+"'" : "''")+","+
