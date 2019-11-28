@@ -1,8 +1,8 @@
 const path = require('path');
 
 export default class Image {
-  groupId: string = '';
-  groupName : string = '';
+  public groupId: string = '';
+  public groupName : string = '';
   public title : string = '';
   public description : string = '';
   public format : string = '';
@@ -20,8 +20,10 @@ export default class Image {
   public createdBy : string = '';
   public createdTime : string = '';
   public deactivationTime : string = '';
+  public dateImageTaken : string = '';
+  public dateImageCreated : string = '';
 
-  public tag : Array<string> = new Array<string>();
+  public tags : Array<string> = new Array<string>();
 
   toString(){
     return this.fileName;

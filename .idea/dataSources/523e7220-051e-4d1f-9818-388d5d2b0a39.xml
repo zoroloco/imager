@@ -1305,8 +1305,8 @@
       <Charset>utf8mb4</Charset>
       <DefaultForCharset>0</DefaultForCharset>
     </collation>
-    <table id="327" parent="2" name="image"/>
-    <table id="328" parent="2" name="image_tag"/>
+    <table id="327" parent="2" name="imageGroup"/>
+    <table id="328" parent="2" name="imageGroupTag"/>
     <table id="329" parent="2" name="user"/>
     <column id="330" parent="327" name="id">
       <Position>1</Position>
@@ -1315,196 +1315,140 @@
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="331" parent="327" name="groupId">
+    <column id="331" parent="327" name="title">
       <Position>2</Position>
-      <DataType>bigint(20)|0s</DataType>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="332" parent="327" name="title">
-      <Position>3</Position>
       <DataType>varchar(64)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="333" parent="327" name="description">
-      <Position>4</Position>
+    <column id="332" parent="327" name="description">
+      <Position>3</Position>
       <DataType>varchar(1024)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="334" parent="327" name="format">
+    <column id="333" parent="327" name="path">
+      <Position>4</Position>
+      <DataType>varchar(128)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="334" parent="327" name="sourcePath">
       <Position>5</Position>
-      <DataType>varchar(32)|0s</DataType>
+      <DataType>varchar(128)|0s</DataType>
+      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="335" parent="327" name="mimeType">
+    <column id="335" parent="327" name="createdBy">
       <Position>6</Position>
-      <DataType>varchar(32)|0s</DataType>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="336" parent="327" name="resolution">
-      <Position>7</Position>
-      <DataType>varchar(16)|0s</DataType>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="337" parent="327" name="width">
-      <Position>8</Position>
-      <DataType>int(11)|0s</DataType>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="338" parent="327" name="height">
-      <Position>9</Position>
-      <DataType>int(11)|0s</DataType>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="339" parent="327" name="orientation">
-      <Position>10</Position>
-      <DataType>varchar(16)|0s</DataType>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="340" parent="327" name="cameraModel">
-      <Position>11</Position>
-      <DataType>varchar(64)|0s</DataType>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="341" parent="327" name="path">
-      <Position>12</Position>
-      <DataType>varchar(128)|0s</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="342" parent="327" name="thumbPath">
-      <Position>13</Position>
-      <DataType>varchar(128)|0s</DataType>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="343" parent="327" name="sourcePath">
-      <Position>14</Position>
-      <DataType>varchar(128)|0s</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="344" parent="327" name="createdBy">
-      <Position>15</Position>
       <DataType>bigint(20)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="345" parent="327" name="createdTime">
-      <Position>16</Position>
+    <column id="336" parent="327" name="createdTime">
+      <Position>7</Position>
       <DataType>timestamp|0s</DataType>
       <DefaultExpression>current_timestamp()</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
       <OnUpdate>current_timestamp()</OnUpdate>
     </column>
-    <column id="346" parent="327" name="deactivationTime">
-      <Position>17</Position>
+    <column id="337" parent="327" name="deactivationTime">
+      <Position>8</Position>
       <DataType>timestamp|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="347" parent="327" name="imageCreatedBy">
+    <index id="338" parent="327" name="imageCreatedBy">
       <ColNames>createdBy</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="348" parent="327" name="PRIMARY">
+    <key id="339" parent="327" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="349" parent="327" name="image_ibfk_1">
+    <foreign-key id="340" parent="327" name="image_ibfk_1">
       <ColNames>createdBy</ColNames>
       <RefSchemaName>druidia</RefSchemaName>
       <RefTableName>user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="350" parent="328" name="id">
+    <column id="341" parent="328" name="id">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="351" parent="328" name="name">
+    <column id="342" parent="328" name="tag">
       <Position>2</Position>
-      <DataType>varchar(64)|0s</DataType>
-      <NotNull>1</NotNull>
+      <DataType>varchar(128)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="352" parent="328" name="imageId">
+    <column id="343" parent="328" name="createdBy">
       <Position>3</Position>
       <DataType>bigint(20)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="353" parent="328" name="createdBy">
+    <column id="344" parent="328" name="createdTime">
       <Position>4</Position>
-      <DataType>bigint(20)|0s</DataType>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="354" parent="328" name="createdTime">
-      <Position>5</Position>
       <DataType>timestamp|0s</DataType>
       <DefaultExpression>current_timestamp()</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
       <OnUpdate>current_timestamp()</OnUpdate>
     </column>
-    <column id="355" parent="328" name="deactivationTime">
-      <Position>6</Position>
+    <column id="345" parent="328" name="deactivationTime">
+      <Position>5</Position>
       <DataType>timestamp|0s</DataType>
-      <DefaultExpression>current_timestamp()</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="356" parent="328" name="imageTagImageId">
-      <ColNames>imageId</ColNames>
-      <Type>btree</Type>
-    </index>
-    <index id="357" parent="328" name="imageTagCreatedBy">
+    <column id="346" parent="328" name="imageGroupId">
+      <Position>6</Position>
+      <DataType>bigint(20)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="347" parent="328" name="imageGroupTagCreatedBy">
       <ColNames>createdBy</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="358" parent="328" name="PRIMARY">
+    <key id="348" parent="328" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="359" parent="328" name="image_tag_ibfk_2">
-      <ColNames>imageId</ColNames>
-      <RefSchemaName>druidia</RefSchemaName>
-      <RefTableName>image</RefTableName>
-      <RefColNames>id</RefColNames>
-    </foreign-key>
-    <foreign-key id="360" parent="328" name="image_tag_ibfk_1">
+    <foreign-key id="349" parent="328" name="imageGroupTag_ibfk_1">
       <ColNames>createdBy</ColNames>
       <RefSchemaName>druidia</RefSchemaName>
       <RefTableName>user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="361" parent="329" name="id">
+    <column id="350" parent="329" name="id">
       <Position>1</Position>
       <DataType>bigint(20)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="362" parent="329" name="userId">
+    <column id="351" parent="329" name="userId">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="363" parent="329" name="userName">
+    <column id="352" parent="329" name="userName">
       <Position>3</Position>
       <DataType>varchar(96)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="364" parent="329" name="USERID_INDEX">
+    <index id="353" parent="329" name="USERID_INDEX">
       <ColNames>userId</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
-    <key id="365" parent="329" name="PRIMARY">
+    <key id="354" parent="329" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="366" parent="329" name="USERID_INDEX">
+    <key id="355" parent="329" name="USERID_INDEX">
       <ColNames>userId</ColNames>
       <UnderlyingIndexName>USERID_INDEX</UnderlyingIndexName>
     </key>

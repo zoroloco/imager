@@ -6,51 +6,29 @@ CREATE TABLE user (
   UNIQUE KEY USERID_INDEX (userId) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
-create table image
-(
-  id               bigint auto_increment
-    primary key,
-  groupId          bigint                                null,
-  title            varchar(64)                           null,
-  description      varchar(1024)                         null,
-  format           varchar(32)                           null,
-  mimeType         varchar(32)                           null,
-  resolution       varchar(16)                           null,
-  width            int                                   null,
-  height           int                                   null,
-  orientation      varchar(16)                           null,
-  cameraModel      varchar(64)                           null,
-  path             varchar(128)                          not null,
-  thumbPath        varchar(128)                          null,
-  sourcePath       varchar(128)                          not null,
-  createdBy        bigint                                null,
-  createdTime      timestamp default current_timestamp() null on update current_timestamp(),
-  deactivationTime timestamp null,
-  constraint image_ibfk_1
-    foreign key (createdBy) references user (id)
-);
 
-create index imageCreatedBy
-  on image (createdBy);
+CREATE TABLE `imageGroup` (
+             `id` bigint(20) NOT NULL AUTO_INCREMENT,
+             `title` varchar(64) DEFAULT NULL,
+             `description` varchar(1024) DEFAULT NULL,
+             `path` varchar(128) NOT NULL,
+             `sourcePath` varchar(128) NOT NULL,
+             `createdBy` bigint(20) DEFAULT NULL,
+             `createdTime` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+             `deactivationTime` timestamp NULL DEFAULT NULL,
+              PRIMARY KEY (`id`),
+              KEY `imageCreatedBy` (`createdBy`),
+              CONSTRAINT `image_ibfk_1` FOREIGN KEY (`createdBy`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4;
 
-create table image_tag
-(
-  id             bigint auto_increment
-    primary key,
-  name           varchar(64) not null,
-  imageId       bigint      null,
-  createdBy bigint(20) DEFAULT NULL,
-  createdTime timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  deactivationTime timestamp NULL DEFAULT current_timestamp(),
-  constraint image_tag_ibfk_1
-    foreign key (createdBy) references user (id),
-  constraint image_tag_ibfk_2
-    foreign key (imageId) references image (id)
-);
 
-create index imageTagCreatedBy
-  on image_tag (createdBy);
-
-create index imageTagImageId
-  on image_tag (imageId);
-
+CREATE TABLE `imageGroupTag` (
+                              `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                              `tag` varchar(128) DEFAULT NULL,
+                              `createdBy` bigint(20) DEFAULT NULL,
+                              `createdTime` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+                              `deactivationTime` timestamp NULL DEFAULT NULL,
+                              PRIMARY KEY (`id`),
+                              KEY `imageGroupTagCreatedBy` (`createdBy`),
+                              CONSTRAINT `imageGroupTag_ibfk_1` FOREIGN KEY (`createdBy`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4;

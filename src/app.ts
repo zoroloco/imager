@@ -111,27 +111,6 @@ export class App {
         function persistImage(image:Image): Promise<any>{
             Logger.info('Posting image file to elastic index:'+image.toString()+' to image group ID:'+queueBulk.imageGroupId);
             return elasticClient.indexImage(image);
-                /*
-                mysqlClient.query("insert into image (groupId,sourcePath,path,thumbPath,width,height,mimeType,format,resolution,orientation,cameraModel,createdBy) " +
-                    "values(" +queueBulk.imageGroupId+","+
-                    "'" +image.sourcePath+ "',"+
-                    "'" +image.path+"',"+
-                    "'" +image.thumbPath+"',"+
-                    image.width+","+image.height+","+
-                    (!_.isEmpty(image.mimeType) ? "'"+image.mimeType+"'" : "''")+","+
-                    (!_.isEmpty(image.format) ? "'"+image.format+"'" : "''")+","+
-                    (!_.isEmpty(image.resolution) ? "'"+image.resolution+"'" : "''")+","+
-                    (!_.isEmpty(image.orientation) ? "'"+image.orientation+"'" : "''")+","+
-                    (!_.isEmpty(image.cameraModel) ? "'"+image.cameraModel+"'" : "''")+","+
-                    4+//my user id
-                    ")")
-                    .then((result)=>{
-                        Logger.info('Successfully persisted image file:'+image.toString()+' with ID:'+result.insertId);
-                        resolve();
-                    }).catch((err)=>{
-                    reject(err);
-                });*/
-
         }
 
         /**
@@ -221,6 +200,8 @@ export class App {
                         if(props.hasOwnProperty('Properties')) {
                             image.orientation = props.Properties['exif:Orientation'];
                             image.cameraModel = props.Properties['exif:Model'];
+                            image.dateImageTaken = props.Properties['date:modify'];
+                            image.dateImageCreated = props.Properties['date:create'];
                         }
 
                         if(props.hasOwnProperty('size')){
@@ -372,7 +353,7 @@ export class App {
     persistDestDir(): Promise<any>{
         Logger.info('Attempting to insert into db image group:'+getDestDir());
         return new Promise((resolve,reject)=>{
-            mysqlClient.query("insert into image (sourcePath,path,createdBy) " +
+            mysqlClient.query("insert into imageGroup (sourcePath,path,createdBy) " +
                 "values("+
                 "'"+srcDir+"',"+
                 "'"+getDestDir()+"',"+4+//my user id
@@ -398,7 +379,7 @@ export class App {
         let date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 
         return new Promise((resolve,reject)=>{
-            mysqlClient.query("select id from image where path='"+getDestDir()+"' and sourcePath='"+srcDir+"' and deactivationTime is null").then((data)=>{
+            mysqlClient.query("select id from imageGroup where path='"+getDestDir()+"' and sourcePath='"+srcDir+"' and deactivationTime is null").then((data)=>{
                 Logger.info('Select query for image group returned:'+JSON.stringify(data));
                 if(_.isEmpty(data)){
                     Logger.info(getDestDir()+' image group was not found in the db.');
@@ -450,28 +431,6 @@ export class App {
             }).catch((err)=>{Logger.error('Error querying elastic for existing image with err:'+JSON.stringify(err))});
 
         });
-
-
-        /*
-        return new Promise((resolve,reject)=> {
-            Logger.debug("Querying elastic for image:" + file);
-
-            let query = "select * from image i where groupId = " + imageGroupId + " and sourcePath = '" + path.join(srcDir, file) + "'";
-
-            mysqlClient.query(query).then(results => {
-                if (_.isEmpty(results)) {
-                    Logger.debug(file + " not found in db.");
-                    resolve();
-                } else {
-                    reject(file + " was already found in db.");
-                }
-
-            }).catch(err => {
-                reject(err);
-            });
-        });
-
-             */
     }
 
     /**
@@ -491,6 +450,9 @@ export class App {
             image.fileName = uniqueFilename;
             image.groupName = path.basename(srcDir);
             image.groupId = imageGroupId+'';
+            image.createdTime = new Date().toDateString();
+            image.createdBy = "4";
+            image.tags.push('khc');//add the universal tag.
 
             return image;
         }
@@ -555,7 +517,7 @@ export class App {
                                 })
                                 .catch((err)=>{
                                     this.checkIfCopyDone(filesToProcess,imageGroupId);
-                            });
+                            }).catch((err)=>{Logger.error(err)});
                         }
                         else{
                             this.sourceFileCount--;
