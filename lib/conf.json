@@ -16,7 +16,7 @@
         "database": "druidia"
     },
     "elastic": {
-        "node": "http://192.168.1.110:9200",
+        "node": "http://127.0.0.1:9200",
         "log": "error",
         "index": "image",
         "requestTimeout": 60000
