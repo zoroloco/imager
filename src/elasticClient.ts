@@ -27,4 +27,11 @@ export default class ElasticClient{
         });
         return result;
     }
+
+    async count(){
+        const result = await this.client.count({
+            index: conf.elastic.index
+        });
+        return result;
+    }
 }

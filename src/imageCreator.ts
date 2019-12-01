@@ -5,6 +5,9 @@ import conf from './conf.json';
 import MySqlClient from './mysqlClient';
 import ElasticClient from './elasticClient';
 import Queue from 'better-queue';
+import {TagUpdater} from "./tagUpdater";
+import {ImagerEvents} from './imagerEvents';
+
 const gm = require('gm').subClass({imageMagick: true});
 const EventEmitter = require('events').EventEmitter;
 const fs = require('fs');
@@ -41,21 +44,11 @@ export enum ExifOrientation{
     LEFT_BOTTOM
 }
 
-/**
- * Traverses conf.imageDir files and for each filename not found in the database,
- * it will backup the file and then create a thumbnail
- * finally save the file meta-data to the db.
- */
-
-export enum ImagerEvents{
-    DONE = "DONE"
-}
-
 function getDestDir(){
     return path.join(destDir,path.basename(srcDir));
 }
 
-export class App {
+export class ImageCreator {
 
     private allowedFileTypes: Set<string>
     private sourceFileCounter: number = 0;//the current count of image files in src dir
@@ -64,13 +57,16 @@ export class App {
     private queueSize: number = 0;
     private emitter: any;
 
-    constructor(){
+    constructor(srcDirectory:string,destDirectory:string){
+        srcDir = srcDirectory;
+        destDir = destDirectory;
         this.allowedFileTypes = new Set<string>();
-        this.allowedFileTypes.add('.png').add('.jpeg').add('.jpg').add('.gif').add('.img').add('.JPG');
+        this.allowedFileTypes.add('.png').add('.jpeg').add('.jpg').add('.gif').add('.img').add('.JPG').add('.JPEG').add('.PNG');
         this.queue = new Queue(this.processQueueTask, conf.queueSettings);
         this.emitter = new EventEmitter();
 
         this.defineListeners();
+        this.start();
     }
 
     /**
@@ -534,24 +530,10 @@ export class App {
     }
 
     /**
-     * Main app execution point.
+     * start the main flow of adding images to elastic.
      */
-    run(){
-        Logger.info('--Starting execution--');
-        //0         //1        //2   //3
-        //node lib/index.js  /foo  /bar
-        if(process.argv.length === 4){
-            srcDir = process.argv[2];
-            destDir = process.argv[3];
-        }
-
-        if(_.isEmpty(srcDir) || _.isEmpty(destDir)){
-            Logger.error('Src and Dest directories need to be specified. Please run program in the format: node lib/index.js /src /dest');
-            this.emitter.emit(ImagerEvents.DONE);
-        }
-        else{
-            Logger.info('Source directory:'+srcDir+' Destination directory:'+destDir);
-        }
+    start(){
+        Logger.info('ADDING IMAGES - Source directory:'+srcDir+' Destination directory:'+destDir);
 
         this.createDestDir().then(this.queryDestDir)
             .then((queryResult:any)=>{
@@ -560,9 +542,9 @@ export class App {
                         .then((insertResult:any)=>{
                             this.processSourceDest(insertResult.imageGroupId);
                         }).catch((err)=>{
-                            Logger.error('Error persisting dest dir:'+err);
-                            this.emitter.emit(ImagerEvents.DONE);
-                        });
+                        Logger.error('Error persisting dest dir:'+err);
+                        this.emitter.emit(ImagerEvents.DONE);
+                    });
                 }
                 else{
                     this.processSourceDest(queryResult.imageGroupId);
@@ -572,6 +554,6 @@ export class App {
                 Logger.error('Error querying destination directory:'+err);
                 this.emitter.emit(ImagerEvents.DONE);
             })
+    }
 
-    }//run
 }

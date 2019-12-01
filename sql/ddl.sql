@@ -23,12 +23,32 @@ CREATE TABLE `imageGroup` (
 
 
 CREATE TABLE `imageGroupTag` (
-                              `id` bigint(20) NOT NULL AUTO_INCREMENT,
-                              `tag` varchar(128) DEFAULT NULL,
-                              `createdBy` bigint(20) DEFAULT NULL,
-                              `createdTime` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-                              `deactivationTime` timestamp NULL DEFAULT NULL,
-                              PRIMARY KEY (`id`),
-                              KEY `imageGroupTagCreatedBy` (`createdBy`),
-                              CONSTRAINT `imageGroupTag_ibfk_1` FOREIGN KEY (`createdBy`) REFERENCES `user` (`id`)
+              `id` bigint(20) NOT NULL AUTO_INCREMENT,
+              `tag` varchar(128) DEFAULT NULL,
+              `createdBy` bigint(20) DEFAULT NULL,
+              `createdTime` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+              `deactivationTime` timestamp NULL DEFAULT NULL,
+              PRIMARY KEY (`id`),
+              KEY `imageGroupTagCreatedBy` (`createdBy`),
+              CONSTRAINT `imageGroupTag_ibfk_1` FOREIGN KEY (`createdBy`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE `imageTag` (
+            `id` bigint(20) NOT NULL AUTO_INCREMENT,
+            `tag` varchar(128) DEFAULT NULL,
+            `documentId` varchar(64) NOT NULL,
+            `createdBy` bigint(20) DEFAULT NULL,
+            `createdTime` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+            `deactivationTime` timestamp NULL DEFAULT NULL,
+            PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `imageView` (
+            `id` bigint(20) NOT NULL AUTO_INCREMENT,
+            `documentId` varchar(64) NOT NULL,
+            `createdBy` bigint(20) DEFAULT NULL,
+            `createdTime` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+            `deactivationTime` timestamp NULL DEFAULT NULL,
+            PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4;
