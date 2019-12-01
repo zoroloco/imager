@@ -2,18 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="be9186f4-1f1a-47dd-abf5-439bb2da600f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/imagerEvents.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tagUpdater.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/app.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/lib/app.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/index.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/lib/index.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/ddl.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/ddl.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/imageCreator.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/elasticClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/elasticClient.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/imageCreator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/imageCreator.ts" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -56,16 +46,33 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/imageCreator.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="356">
-              <caret line="69" column="5" lean-forward="true" selection-start-line="69" selection-start-column="5" selection-end-line="69" selection-end-column="5" />
+            <state relative-caret-position="185">
+              <caret line="469" column="28" lean-forward="true" selection-start-line="469" selection-start-column="28" selection-end-line="469" selection-end-column="28" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
             </state>
           </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/index.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1">
+              <caret line="7" selection-start-line="7" selection-end-line="7" />
+              <folding>
+                <element signature="e#0#32#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="mock:///Local">
+          <provider selected="true" editor-type-id="terminal-session-editor" />
         </entry>
       </file>
     </leaf>
@@ -79,7 +86,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>rotate</find>
       <find>toString</find>
       <find>f54446f</find>
       <find>`</find>
@@ -109,6 +115,7 @@
       <find>processAddImages</find>
       <find>processQueueTask</find>
       <find>async</find>
+      <find>allowedFileTypes</find>
     </findStrings>
     <replaceStrings>
       <replace>imageDir</replace>
@@ -266,12 +273,13 @@
       <workItem from="1574958441154" duration="8782000" />
       <workItem from="1575054421655" duration="164000" />
       <workItem from="1575060276382" duration="6549000" />
-      <workItem from="1575165835962" duration="1202000" />
+      <workItem from="1575165835962" duration="2179000" />
+      <workItem from="1575215371301" duration="394000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="138543000" />
+    <option name="totallyTimeSpent" value="139914000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -284,6 +292,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4964789" visible="true" weight="0.20516963" />
       <window_info id="Structure" order="1" sideWeight="0.50352114" side_tool="true" weight="0.18739903" />
@@ -303,7 +312,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="TypeScript" order="9" weight="0.32956153" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" weight="0.32956153" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.2135785" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.2135785" />
       <window_info anchor="bottom" id="Console" order="12" />
       <window_info anchor="bottom" id="Database Console" order="13" weight="0.31683168" />
       <window_info anchor="bottom" id="DB Execution Console" order="14" />
@@ -605,16 +614,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="46" column="41" selection-start-line="46" selection-start-column="41" selection-end-line="46" selection-end-column="41" />
-          <folding>
-            <element signature="e#1#33#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/logs/imager-29-11-2019.log">
       <provider selected="true" editor-type-id="LogFileEditorProvider" />
     </entry>
@@ -648,8 +647,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/imageCreator.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="356">
-          <caret line="69" column="5" lean-forward="true" selection-start-line="69" selection-start-column="5" selection-end-line="69" selection-end-column="5" />
+        <state relative-caret-position="185">
+          <caret line="469" column="28" lean-forward="true" selection-start-line="469" selection-start-column="28" selection-end-line="469" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
           <folding>
             <element signature="e#0#32#0" expanded="true" />
           </folding>

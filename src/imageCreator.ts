@@ -466,7 +466,13 @@ export class ImageCreator {
      */
     verifyFileType(file:string): boolean{
         if(this.allowedFileTypes.has(path.extname(file))) {
-            return true;
+            if(!(/(\/|^)\.[^\/\.]/g).test(file)) {//ignore hidden files. TODO: get this to work!
+                return true;
+            }
+            else{
+                Logger.warn('Not adding:'+file+' because it is a hidden file.');
+                return false;
+            }
         }
         else{
             Logger.warn('Not adding:'+file+' because it is of the wrong filetype.');
