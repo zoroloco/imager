@@ -8,7 +8,7 @@ import Queue from 'better-queue';
 import {TagUpdater} from "./tagUpdater";
 import {ImagerEvents} from './imagerEvents';
 
-const gm = require('gm').subClass({imageMagick: true});
+const gm = require('gm');
 const EventEmitter = require('events').EventEmitter;
 const fs = require('fs');
 const path = require('path');
