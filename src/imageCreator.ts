@@ -193,16 +193,43 @@ export class ImageCreator {
                             image.mimeType = props["Mime type"];
                         if(props.hasOwnProperty("Resolution"))
                             image.resolution = props.Resolution;
-                        if(props.hasOwnProperty('Properties')) {
+
+                        if(props.hasOwnProperty('Properties')) {//Works for mobile.
                             image.orientation = props.Properties['exif:Orientation'];
                             image.cameraModel = props.Properties['exif:Model'];
-                            image.dateImageTaken = props.Properties['date:modify'];
-                            image.dateImageCreated = props.Properties['date:create'];
+                            if(!_.isEmpty(props.Properties['date:modify']))
+                                image.dateImageTaken = props.Properties['date:modify'];
+
+                            if(!_.isEmpty(props.Properties['date:create']))//2019-10-14T02:04:41+00:00
+                                image.dateImageCreated = props.Properties['date:create'];
+                        }
+                        else if(props.hasOwnProperty('Profile-EXIF')){//For Sony NEX5n camera.
+                            image.cameraMake = props['Profile-EXIF']['Make'];
+                            image.cameraModel = props['Profile-EXIF']['Model'];
+                            image.orientation = props['Profile-EXIF']['Profile-EXIF'].Orientation;
+
+                            //2019:07:09 16:58:35'
+                            let dateImageTakenStr = props['Profile-EXIF']['Date Time'];
+                            if(!_.isEmpty(dateImageTakenStr)){
+                                let strSplit:string[] = dateImageTakenStr.toString().split(' ');
+                                if(null != strSplit && strSplit.length>1){
+                                    let dateStr:string = strSplit[0];
+                                    let timeStr:string = strSplit[1];
+
+                                    dateStr = dateStr.replace(':','-').replace(':','-');
+                                    dateStr = dateStr+' '+timeStr;
+                                    let dateImageTaken = new Date(dateStr);
+                                    image.dateImageTaken = dateImageTaken;
+                                    Logger.info('Date image taken for '+image.fileName+':'+image.dateImageTaken);
+                                }
+                            }
                         }
 
                         if(props.hasOwnProperty('size')){
                             image.height = props.size.height;
                             image.width = props.size.width;
+
+                            Logger.info('DONE extracting EXIF properties for image:'+image.toString());
 
                             gm(image.getAbsolutePath()).thumb(
                                 props.size.width/2,

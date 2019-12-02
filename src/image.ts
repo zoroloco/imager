@@ -11,6 +11,7 @@ export default class Image {
   public width  : string = '';
   public height : string = '';
   public orientation : string = '';
+  public cameraMake: string = '';
   public cameraModel : string = '';
   public path : string = '';
   public fileName : string = '';
@@ -20,13 +21,15 @@ export default class Image {
   public createdBy : string = '';
   public createdTime : string = '';
   public deactivationTime : string = '';
-  public dateImageTaken : string = '';
-  public dateImageCreated : string = '';
+  public dateImageTaken : Date = new Date();
+  public dateImageCreated : Date = new Date();
 
   public tags : Array<string> = new Array<string>();
 
   toString(){
-    return this.fileName;
+    return 'fileName:'+this.fileName+' groupId:'+this.groupId+' cameraMake:'+
+                       this.cameraMake+' cameraModel:'+this.cameraModel+' orientation:'+
+                       this.orientation+' mimeType:'+this.mimeType+' dateImageTaken:'+this.dateImageTaken;
   }
 
   getAbsolutePath(){
