@@ -19,7 +19,16 @@
         "node": "http://127.0.0.1:9200",
         "log": "error",
         "index": "image",
-        "requestTimeout": 60000
+        "requestTimeout": 60000,
+        "bulkSize": 40,
+        "queueSettings": {
+            "maxRetries": 1,
+            "retryDelay": 10000,
+            "batchSize": 1,
+            "batchDelay": 5000,
+            "batchDelayTimeout": 1000,
+            "afterProcessDelay": 5000
+        }
     },
     "fileBulkSize": 5,
     "queueSettings": {
@@ -31,6 +40,6 @@
         "afterProcessDelay": 300
     },
     "thumbnailSettings": {
-        "quality": 50
+        "quality": 80
     }
 }

@@ -15,8 +15,20 @@ export default class ElasticClient{
         })
     }
 
+    indexImageInBulk(body:any) : Promise<any>{
+        return new Promise((resolve,reject)=>{
+            this.client.bulk({refresh:true,body})
+                .then(()=>{
+                    resolve();
+                })
+                .catch((err:any)=>{
+                   reject('Error posting to elastic in bulk:'+JSON.stringify(err));
+                });
+        });
+    }
+
     async search(from:number,size:number,searchParams:any){
-        const result = await this.client.search({
+        return  await this.client.search({
             index: conf.elastic.index,
             from: from,
             size: size,
@@ -25,13 +37,11 @@ export default class ElasticClient{
             ignore: [404],
             maxRetries: 3
         });
-        return result;
     }
 
     async count(){
-        const result = await this.client.count({
+        return await this.client.count({
             index: conf.elastic.index
         });
-        return result;
     }
 }

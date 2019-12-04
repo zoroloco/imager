@@ -7,6 +7,7 @@ import ElasticClient from './elasticClient';
 import Queue from 'better-queue';
 import {TagUpdater} from "./tagUpdater";
 import {ImagerEvents} from './imagerEvents';
+import image from "./image";
 
 const gm = require('gm');
 const EventEmitter = require('events').EventEmitter;
@@ -14,11 +15,15 @@ const fs = require('fs');
 const path = require('path');
 const uuidv4 = require('uuid/v4');
 
+//require('array.prototype.flatmap').shim();
+
 const mysqlClient: MySqlClient = new MySqlClient();
 const elasticClient: ElasticClient = new ElasticClient();
 
 let srcDir:string = '';
 let destDir:string = '';
+
+let imagesToPost:Array<Image> = new Array<Image>();
 
 /**
 
@@ -53,8 +58,10 @@ export class ImageCreator {
     private allowedFileTypes: Set<string>
     private sourceFileCounter: number = 0;//the current count of image files in src dir
     private sourceFileCount: number = 0;//the total image files in src dir
-    private queue: Queue;
-    private queueSize: number = 0;
+    private thumbQueue: Queue;
+    private elasticQueue: Queue;
+    private thumbQueueSize: number = 0;
+    private elasticQueueSize: number = 0;
     private emitter: any;
 
     constructor(srcDirectory:string,destDirectory:string){
@@ -62,7 +69,8 @@ export class ImageCreator {
         destDir = destDirectory;
         this.allowedFileTypes = new Set<string>();
         this.allowedFileTypes.add('.png').add('.jpeg').add('.jpg').add('.gif').add('.img').add('.JPG').add('.JPEG').add('.PNG');
-        this.queue = new Queue(this.processQueueTask, conf.queueSettings);
+        this.thumbQueue = new Queue(this.processThumbQueueTask, conf.queueSettings);
+        this.elasticQueue = new Queue(this.processElasticQueueTask, conf.elastic.queueSettings);
         this.emitter = new EventEmitter();
 
         this.defineListeners();
@@ -74,17 +82,34 @@ export class ImageCreator {
      * define any listeners.
      */
     defineListeners(){
-        this.queue.on('task_finish',(taskId,result)=>{
-            Logger.info(taskId+' queue task has completed successfully.');
-            this.queueSize--;
+        this.thumbQueue.on('task_finish',(taskId,result)=>{
+            Logger.info(taskId+' thumb queue task has completed successfully.');
+            this.thumbQueueSize--;
+            Logger.info(this.thumbQueueSize+' thumb queues remain to be processed.');
 
-            if(!this.queueSize){
+            if(!this.thumbQueueSize){
+                Logger.info('All thumb queues have finished processing for thumbnail creation.');
+                this.buildElasticQueues();
+            }
+        });
+
+        this.thumbQueue.on('task_failed',(taskId,err)=>{
+           Logger.error(taskId+' thumb queue task failed with error:'+JSON.stringify(err));
+        });
+
+        this.elasticQueue.on('task_finish',(taskId,result)=>{
+            Logger.info(taskId+' elastic queue task has completed successfully.');
+            this.elasticQueueSize--;
+            Logger.info(this.elasticQueueSize+' elastic queues remain to be processed.');
+
+            if(!this.elasticQueueSize){
+                Logger.info('*All elastic queues have finished processing*');
                 this.emitter.emit(ImagerEvents.DONE);
             }
         });
 
-        this.queue.on('task_failed',(taskId,err)=>{
-           Logger.error(taskId+' task failed with error:'+err);
+        this.elasticQueue.on('task_failed',(taskId,err)=>{
+            Logger.error(taskId+' elastic queue task failed with error:'+JSON.stringify(err));
         });
 
         this.emitter.on(ImagerEvents.DONE, ()=>{
@@ -93,11 +118,40 @@ export class ImageCreator {
         });
     }
 
+    buildElasticQueues(){
+        let imageBulk:Array<any> = new Array<any>();
+
+        if(imagesToPost){
+            Logger.info(imagesToPost.length+' images will be posted in bulk to elastic with bulk size:'+conf.elastic.bulkSize);
+            let imageCount:number = 0;
+            imagesToPost.forEach(image=>{
+                imageCount++;
+
+                imageBulk.push({"index":{"_index": conf.elastic.index,"_id":image.groupId+"_"+image.fileName}});
+                imageBulk.push(image);
+
+                if(imageBulk.length % conf.elastic.bulkSize == 0 || imageCount === imagesToPost.length){
+                    this.elasticQueue.push(imageBulk);
+                    this.elasticQueueSize++;
+                    imageBulk = new Array<Image>();//reset
+                }
+            });
+        }
+    }
+
+    processElasticQueueTask(imageBulk:any, cb:any){
+        Logger.info('Processing elastic queue task with queue bulk size of:'+imageBulk.length);
+        elasticClient.indexImageInBulk(imageBulk)
+            .then(cb).catch((err)=>{cb('Error processing elastic queue task with error:'+JSON.stringify(err))});
+    }
+
     /**
      * Processes a batch of files that have been queued up.
      * This is the callback method called by the queue.
+     *
+     * This method is called once each queue is ready to process.
      */
-    processQueueTask(queueBulk:any, cb:any){
+    processThumbQueueTask(queueBulk:any, cb:any){
         let completedCount:number = 0;
 
         /**
@@ -260,7 +314,8 @@ export class ImageCreator {
         /**
          * Once all images completed, then queue task will be done.
          */
-        function updateCompletedCount(){
+        function updateCompletedCount(image:Image){
+            imagesToPost.push(image);
             completedCount++;
             if(completedCount === queueBulk.fileBulk.length){
                 Logger.info("All done creating thumbnails and persisting images for this bulk queue task.");
@@ -275,7 +330,8 @@ export class ImageCreator {
             for(let image of queueBulk.fileBulk){
                 Logger.debug('Processing thumb for:'+image.toString());
 
-                createThumbnail(image).then(autoOrientThumb).then(persistImage).then(updateCompletedCount)
+                //createThumbnail(image).then(autoOrientThumb).then(persistImage).then(updateCompletedCount)
+                createThumbnail(image).then(autoOrientThumb).then(updateCompletedCount)
                     .catch((err)=>{Logger.error(err)});
             }
         }
@@ -300,8 +356,8 @@ export class ImageCreator {
             if(fileCount % conf.fileBulkSize === 0 || fileCount === filesToProcess.length){
                 Logger.info('The files to process has now reached the max bulk size of:'+conf.fileBulkSize+' or all files exhausted.');
                 Logger.info('Adding bulk to the queue for processing.');
-                this.queue.push({"imageGroupId":imageGroupId, "fileBulk":fileBulk},function(){});
-                this.queueSize++;
+                this.thumbQueue.push({"imageGroupId":imageGroupId, "fileBulk":fileBulk},function(){});
+                this.thumbQueueSize++;
                 fileBulk = new Array<Image>();//reset
             }
         }
