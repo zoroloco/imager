@@ -19,7 +19,8 @@ npm install
 npm run build
 npm start
 
-
+Note: If you are getting ECONNRESET while running on large src folders, then increase the timeout limit of your
+mariadb/mysql db. 
 
 Run:
 
