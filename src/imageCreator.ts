@@ -182,7 +182,7 @@ export class ImageCreator {
                         resolve(image);
                     }
                     else{
-                        Logger.info('Orientation of:'+image.orientation+' found. There is a need to auto orient.');
+                        Logger.info('Orientation of:'+image.orientation+' found. There is a need to auto orient:'+image.sourceName);
                         let rotationAngle:number = 0;
                         switch(image.orientation){
                             case ExifOrientation.BOTTOM_RIGHT+'':
@@ -196,7 +196,7 @@ export class ImageCreator {
                         }
 
                         if(rotationAngle>0){
-                            Logger.info('Attempting to flip thumb image '+rotationAngle+' degrees.');
+                            Logger.info('Attempting to flip thumb image '+rotationAngle+' degrees for:'+image.sourceName);
                             gm(image.getAbsoluteThumbPath()).rotate('white',rotationAngle)
                                 .write(image.getAbsoluteThumbPath(),   (err:any)=>{
                                     if(!_.isEmpty(err)){
@@ -208,6 +208,7 @@ export class ImageCreator {
                                 });
                         }
                         else{
+                            Logger.info('Rotation angle was unchanged, so no rotation will be performed for:'+image.sourceName);
                             resolve(image);
                         }
                     }
@@ -247,6 +248,10 @@ export class ImageCreator {
                             image.mimeType = props["Mime type"];
                         if(props.hasOwnProperty("Resolution"))
                             image.resolution = props.Resolution;
+                        //use the default orientation , but this may be overwritten if found in profile-exif.
+                        if(props.hasOwnProperty('Orientation')){
+                            image.orientation = props.Orientation;
+                        }
 
                         if(props.hasOwnProperty('Properties')) {//Works for mobile.
                             image.orientation = props.Properties['exif:Orientation'];
@@ -260,7 +265,14 @@ export class ImageCreator {
                         else if(props.hasOwnProperty('Profile-EXIF')){//For Sony NEX5n camera.
                             image.cameraMake = props['Profile-EXIF']['Make'];
                             image.cameraModel = props['Profile-EXIF']['Model'];
-                            image.orientation = props['Profile-EXIF']['Profile-EXIF'].Orientation;
+
+                            //the iphone xr does not have this extra profile-exif property.
+                            if(props['Profile-EXIF'].hasOwnProperty('Profile-EXIF')){
+                                image.orientation = props['Profile-EXIF']['Profile-EXIF'].Orientation;
+                            }
+                            else{
+                                Logger.error(image.fileName+' did not have orientation.');
+                            }
 
                             //2019:07:09 16:58:35'
                             let dateImageTakenStr = props['Profile-EXIF']['Date Time'];

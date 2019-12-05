@@ -30,7 +30,7 @@
             "afterProcessDelay": 5000
         }
     },
-    "fileBulkSize": 5,
+    "fileBulkSize": 8,
     "queueSettings": {
         "maxRetries": 1,
         "retryDelay": 1000,
