@@ -191,11 +191,14 @@ export class ImageCreator {
                             case ExifOrientation.RIGHT_TOP+'':
                                 rotationAngle = 90;
                                 break;
+                            case ExifOrientation.LEFT_BOTTOM+'':
+                                rotationAngle = -90;
+                                break;
                             default:
                                 break;
                         }
 
-                        if(rotationAngle>0){
+                        if(rotationAngle != 0){
                             Logger.info('Attempting to flip thumb image '+rotationAngle+' degrees for:'+image.sourceName);
                             gm(image.getAbsoluteThumbPath()).rotate('white',rotationAngle)
                                 .write(image.getAbsoluteThumbPath(),   (err:any)=>{
