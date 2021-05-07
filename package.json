@@ -27,7 +27,7 @@
     "better-queue": "^3.8.10",
     "gm": "^1.23.1",
     "mysql": "2.17.1",
-    "underscore": "^1.8.16",
+    "underscore": "^1.12.1",
     "uuid": "^3.3.3",
     "winston": "3.2.1"
   },
